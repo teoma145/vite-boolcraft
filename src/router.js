@@ -4,6 +4,8 @@ import AppTypes from "./views/AppTypes.vue";
 import AppTypeDetails from "./views/AppTypeDetails.vue";
 import AppCharacters from "./views/AppCharacters.vue";
 import AppItem from "./views/AppItem.vue";
+import SingleItem from "./views/SingleItem.vue";
+import CharacterDetails from "./views/CharacterDetails.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,10 +32,27 @@ const router = createRouter({
       component: AppCharacters
     },
     {
+
       path: '/items',
       name: 'items',
       component: AppItem
-    }
+    },
+
+      path:'/items',
+      name:'items',
+      component:AppItem
+    },
+    {
+      path: "/item/:id",
+      name: "single-item",
+      component: SingleItem,
+    },
+    {
+      path:"/characters/:id",
+      name:"characters-detail",
+      component:CharacterDetails,
+    },
+
   ]
 })
 
