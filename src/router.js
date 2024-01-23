@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AppHome from "./views/AppHome.vue";
 import AppTypes from "./views/AppTypes.vue";
+import AppTypeDetails from "./views/AppTypeDetails.vue";
 import AppCharacters from "./views/AppCharacters.vue";
 import AppItem from "./views/AppItem.vue";
 
@@ -18,14 +19,20 @@ const router = createRouter({
       component: AppTypes
     },
     {
+      path: '/types/:id',
+      name: 'type-details',
+      component: AppTypeDetails
+    },
+
+    {
       path: '/characters',
       name: 'characters',
       component: AppCharacters
     },
     {
-      path:'/items',
-      name:'items',
-      component:AppItem
+      path: '/items',
+      name: 'items',
+      component: AppItem
     }
   ]
 })
