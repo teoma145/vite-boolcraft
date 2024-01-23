@@ -37,10 +37,10 @@ const router = createRouter({
       name: 'items',
       component: AppItem
     },
-
-      path:'/items',
-      name:'items',
-      component:AppItem
+    {
+      path: '/items',
+      name: 'items',
+      component: AppItem
     },
     {
       path: "/item/:id",
@@ -48,9 +48,9 @@ const router = createRouter({
       component: SingleItem,
     },
     {
-      path:"/characters/:id",
-      name:"characters-detail",
-      component:CharacterDetails,
+      path: "/characters/:id",
+      name: "characters-detail",
+      component: CharacterDetails,
     },
 
   ]
