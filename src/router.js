@@ -25,33 +25,27 @@ const router = createRouter({
       name: 'type-details',
       component: AppTypeDetails
     },
-
     {
       path: '/characters',
       name: 'characters',
       component: AppCharacters
     },
     {
-
-      path: '/items',
-      name: 'items',
-      component: AppItem
-    },
-    {
-      path: '/items',
-      name: 'items',
-      component: AppItem
-    },
-    {
-      path: "/item/:id",
-      name: "single-item",
-      component: SingleItem,
-    },
-    {
       path: "/characters/:id",
       name: "characters-detail",
       component: CharacterDetails,
     },
+    {
+      path: '/items',
+      name: 'items',
+      component: AppItem
+    },
+    {
+      path: "/items/:id",
+      name: "single-item",
+      component: SingleItem,
+    },
+
 
   ]
 })
