@@ -36,12 +36,15 @@ export default {
             console.log(this.$route);
 
             axios.get(store.apiBaseUrl + '/types/' + this.$route.params.id).then(res => {
-                console.log(res);
+                //console.log(res);
                 this.item = res.data.results;
             })
         }
     },
     mounted() {
+
+    },
+    created() {
         this.getSingleType();
     }
 }
