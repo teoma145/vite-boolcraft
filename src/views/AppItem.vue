@@ -1,8 +1,9 @@
 <template>
-    <main>
+    <main class="container">
         <h1>Item List</h1>
     
-    <div class="col-12 col-md-4 col-lg-3" v-for="item in store.Items" :key="item.id">{{ item.name }}</div>
+    <div class="col-12 col-md-4 col-lg-3" v-for="item in store.Items" :key="item.id"><router-link :to="{ name: 'single-item', params: { id: item.id } }" class="btn btn-primary">{{ item.name }}</router-link></div>
+    
     </main>
  
              
