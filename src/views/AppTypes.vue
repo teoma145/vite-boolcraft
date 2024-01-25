@@ -8,8 +8,7 @@
                     <div class="card-body">
                         <h3> {{ item.name }}</h3>
                         <p>{{ item.description.substring(0, 20) + '...' }}</p>
-                        <router-link class="btn btn-primary" :to="{ name: 'type-details', params: { id: item.id } }"> See
-                            Details</router-link>
+                        <router-link class="btn btn-primary" :to="{ name: 'type-details', params: { id: item.id } }"> See Details</router-link>
                     </div>
                 </div>
             </div>
