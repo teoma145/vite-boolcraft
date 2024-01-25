@@ -7,7 +7,7 @@
             <nav>
                 <ul class="d-flex align-items-center ">
                     <li v-for="(item) in routes" class="mx-2">
-                        <router-link class="text-decoration-none text-black" :to="{ name: `${item.path}`}"> {{ item.name }}</router-link>
+                        <router-link class="text-decoration-none nav-text" :to="{ name: `${item.path}`}"> {{ item.name }}</router-link>
                     </li>
                 </ul>
             </nav>
@@ -36,7 +36,11 @@ export default {
                 {
                     path: 'items',
                     name: 'Items',
-                }
+                },
+                {
+                    path: 'game',
+                    name: 'Game',
+                },
             ]
         }
     },
@@ -60,5 +64,12 @@ ul {
     z-index: 1000;
     width:100vw;
     height:100px;
+}
+
+.nav-text{
+    text-transform: uppercase;
+    font-weight: bold;
+    color: rgb(255, 185, 17);
+    text-shadow: 4px 4px 9px rgba(0,0,0,0.82);
 }
 </style>

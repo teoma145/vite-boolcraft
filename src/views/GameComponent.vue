@@ -1,4 +1,3 @@
-
 <template>
     <div class="mybg-d">
         <div class="container d-flex h-100 align-items-center justify-content-center ">
@@ -31,9 +30,9 @@
 </template>
 
 <script>
-    import { store } from "../store";
-    import axios from "axios";
-    export default {
+import { store } from "../store";
+import axios from "axios";
+export default {
     name: 'GameComponent',
     data() {
         return {
@@ -45,24 +44,24 @@
     },
     methods: {
         getGameCharacters() {
-      axios.get(store.apiBaseUrl + "/characters").then((response) => {
-        console.log(response);
-        this.characters = response.data.data;
-        console.log(this.characters);
-      });
-    },
-    getGameTypes() {
+            axios.get(store.apiBaseUrl + "/characters").then((response) => {
+                console.log(response);
+                this.characters = response.data.data;
+                console.log(this.characters);
+            });
+        },
+        getGameTypes() {
             axios.get(store.apiBaseUrl + '/types').then(res => {
                 //console.log(res);
                 this.typesList = res.data.results;
             })
         },
-    getGameItems() {
-            axios.get(store.apiBaseUrl+`/items`).then((res) => {
-                     
-            store.Items = res.data.results
+        getGameItems() {
+            axios.get(store.apiBaseUrl + `/items`).then((res) => {
+
+                store.Items = res.data.results
             })
-            },
+        },
         getRandomCharacter(charactersArray) {
             const randomIndex = Math.floor(Math.random() * charactersArray.length);
             return charactersArray[randomIndex];
@@ -78,27 +77,28 @@
             return itemsArray[randomIndex];
         },
     },
-        
-    
+
+
     created() {
         this.getGameCharacters();
-        this.getGameTypes();  
-        this.getGameItems();  
+        this.getGameTypes();
+        this.getGameItems();
     }
-    }
+}
 </script>
 
 <style lang="scss" scoped>
-.mybg-d{
+.mybg-d {
     background-image: url(../assets/images/D&D.jpg);
+    background-size: cover;
     height: 100vh;
 }
 
-        
-html, body {
+
+html,
+body {
     height: 100%;
     margin: 0;
-    
-        }
 
+}
 </style>
