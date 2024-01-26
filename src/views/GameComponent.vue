@@ -129,6 +129,7 @@ export default {
     background-image: url(../assets/images/D&D.jpg);
     background-size: cover;
     height: 100vh;
+    margin-top: -100px;
 }
 
 

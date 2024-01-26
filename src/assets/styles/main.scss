@@ -5,5 +5,13 @@ $fa-font-path: '../webfonts';
 @import '@fortawesome/fontawesome-free/scss/solid.scss';
 @import '@fortawesome/fontawesome-free/scss/regular.scss';
 @import '@fortawesome/fontawesome-free/scss/brands.scss';
+@import url(https://fonts.googleapis.com/css?family=Uncial+Antiqua&display=swap);
 
 @import 'bootstrap/scss/bootstrap';
+
+body {
+    font-family: 'Uncial Antiqua', cursive;
+    background-color: #1b1b1b;
+    color: #fff;
+  }
+  
