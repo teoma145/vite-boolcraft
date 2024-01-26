@@ -1,6 +1,8 @@
 <template>
   <AppHeader/>
-  <router-view></router-view>
+  <div class="space">
+    <router-view ></router-view>
+  </div>
 </template>
 
 <script>
@@ -19,5 +21,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.space{
+  padding-top:100px;
+}
 </style>
