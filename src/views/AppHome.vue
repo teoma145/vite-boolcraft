@@ -1,14 +1,30 @@
 <template>
   <div class="conTain ">
     <img src="../assets/images/project2.jpg" alt="boolcraft" class="boolImages">
-    
+  
+  <div class="container d-flex justify-content-between align-items-center "></div>
    <button type="button" class="btn btn-outline-warning ">
    
     <p>INSERT COIN</p>
     <i class="fa-solid fa-circle-dollar-to-slot fa-bounce" style="color: #FFD43B;"></i>
   </button>
- 
   </div>
+ 
+  <section class="d-flex footerdo">
+        <div class="container d-flex justify-content-between align-items-center ">
+            
+            <ul class="nav align-items-center icons">
+                <li class="follow">Follow Us</li>
+                <li><i class="fa-brands fa-facebook log"></i></li>
+                <li><i class="fa-brands fa-square-x-twitter log" ></i></li>
+                <li><i class="fa-brands fa-youtube log" ></i></li>
+                <li><i class="fa-brands fa-periscope log" ></i></li>
+            </ul>
+        
+          </div>
+
+    </section>
+  
   
 </template>
 
@@ -19,7 +35,7 @@ export default {
  name: 'AppHome',
  data() {
    return {
-
+ 
    }
  },
  
@@ -70,5 +86,23 @@ export default {
     background-color: rgba(19, 19, 19, 0.849);
 }
 
+.icons{
+  position: absolute;
+  top: 90%;
+  margin-left: 16%;
+}
+
+.log{
+  margin-left: 60px;
+  font-size: 2.3em;
+  color: #FFD43B;
+  
+}
+
+.follow{
+  font-family: 'Black Ops One', system-ui;
+  font-size: 1.5em;
+  color: rgb(26, 24, 20);
+}
 
 </style>
