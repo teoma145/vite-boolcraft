@@ -26,6 +26,7 @@ export default {
     color: #ffffff;
     padding: 20px 0;
     margin-top: 50px;
+    
 }
 
 .logo {
