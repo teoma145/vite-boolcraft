@@ -1,32 +1,69 @@
 <template>
     <div class="mybg-d">
-        <div class="container d-flex h-100 align-items-center justify-content-center ">
-            <div class="d-flex">
-                <div class="text-black me-5 bg-white ">
-                <select v-model="selectedCharacter" @change="getSelectedCharacterStats">
-                    <option v-for="character in characters" :key="character.id" :value="character.name">{{ character.name }}</option>
-                </select><br>
-                    Difesa:{{ selectedCharacterStats.defence }}<br>
-                    Vita:{{ selectedCharacterStats.life }}<br>
-                    Speed:{{ selectedCharacterStats.speed }}<br>
-                    Attacco:{{ selectedCharacterStats.attack }}<br>
-                    
+        <div class="container h-100 align-items-center justify-content-center ">
+            <div class="row justify-content-center py-5">
+                <h1 class="text-center text-danger">
+                    Select Your Character
+                </h1>
+                <div class="col-3 pt-5">
+
+                    <select @change="getSelectedCharacter()" name="" id="" class="form-select"
+                        v-model="selectedCharacterId">
+                        <option :value="character.id" v-for="character in characters"> {{ character.name }}
+                        </option>
+                    </select>
                 </div>
-                <div class="mt-4">
-                    <h1 class="text-danger">VERSUS</h1>
-                </div>
-                <div class="text-black ms-5 bg-white ">
-                    nome:{{ selectedOpponentStats.name }}<br>
-                    Difesa:{{ selectedOpponentStats.defence }}<br>
-                    Vita:{{ selectedOpponentStats.life }}<br>
-                    Speed:{{ selectedOpponentStats.speed }}<br>
-                    Attacco:{{ selectedOpponentStats.attack }}<br>
-                    
-                    
-                </div>
+
             </div>
-             <button @click="selectRandomOpponent">Entra nell'arena</button><br>
+            ß
+            <div class="text-black me-5">
+                <div class="d-flex justify-content-between" v-if="selectedCharacter">
+                    <div class="">
+                        <div class="card">
+                            <div class="card-body mb-5">
+                                <h5>Name:{{ selectedCharacter.name }}</h5>
+                                <div>Defence:{{ selectedCharacter.defence }} </div>
+                                <div>Life:{{ selectedCharacter.life }}</div>
+                            </div>
+
+                        </div>
+                        <button v-if="!randomCharacter" @click.once="rndOpponent()" class="btn btn-primary">Random
+                            Opponent</button>
+                    </div>
+
+
+                    <div>
+
+                        <div class="mb-5" v-if="randomCharacter">
+                            <div class="mt-4">
+                                <h2 class="text-danger">VERSUS</h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div v-if="randomCharacter">
+
+                        <div class="card">
+                            <div class="card-body">
+                                <h5>{{ randomCharacter.name }}</h5>
+                                <div>{{ randomCharacter.defence }} </div>
+                                <div>{{ randomCharacter.life }}</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+            <div class="text-black ms-5">
+
+            </div>
+
         </div>
+
     </div>
 </template>
 
@@ -41,51 +78,30 @@ export default {
             typesList: null,
             characters: [],
             store,
-            selectedCharacter: "",
-            selectedCharacterStats: {
-                defence: 0,
-                life: 0,
-                speed: 0,
-                attack: 0,
-                
-            },
-            selectedOpponentStats: {
-            name: "",
-            defence: 0,
-            life: 0,
-            speed: 0,
-            attack: 0,
-            
-      }
+            randomCharacter: null,
+            selectedCharacterId: null,
+            selectedCharacter: null,
+            charactersFree: null
         }
     },
     methods: {
-        getSelectedCharacterStats() {
-            const selectedCharacter = this.characters.find(character => character.name === this.selectedCharacter);
-            if (selectedCharacter) {
-                this.selectedCharacterStats.defence = selectedCharacter.defence;
-                this.selectedCharacterStats.life = selectedCharacter.life;
-                this.selectedCharacterStats.speed = selectedCharacter.speed;
-                this.selectedCharacterStats.attack = selectedCharacter.attack;
-                 
-                
-            }
-        },
         getGameCharacters() {
             axios.get(store.apiBaseUrl + "/characters").then((response) => {
-                console.log(response);
                 this.characters = response.data.data;
-                console.log(this.characters);
             });
         },
-         selectRandomOpponent() {
-        const filteredCharacters = this.characters.filter(character => character.name !== this.selectedCharacter);
-        const randomOpponent = this.getRandomCharacter(filteredCharacters);
-        this.selectedOpponentStats.name = randomOpponent.name;
-        this.selectedOpponentStats.defence = randomOpponent.defence;
-        this.selectedOpponentStats.life = randomOpponent.life;
-        this.selectedOpponentStats.speed = randomOpponent.speed;
-        this.selectedOpponentStats.attack = randomOpponent.attack;
+        getSelectedCharacter() {
+            this.characters.forEach(el => {
+                if (el.id == this.selectedCharacterId) {
+                    this.selectedCharacter = el;
+                }
+            })
+
+        },
+        rndOpponent() {
+            const charactersFree = this.characters.filter(el => el.id != this.selectedCharacterId)
+            console.log(charactersFree);
+            this.randomCharacter = charactersFree[this.getRndInteger(0, charactersFree.length)];
         },
         getGameTypes() {
             axios.get(store.apiBaseUrl + '/types').then(res => {
@@ -101,11 +117,13 @@ export default {
         },
         getRandomCharacter(charactersArray) {
             const randomIndex = Math.floor(Math.random() * charactersArray.length);
+
             return charactersArray[randomIndex];
         },
 
         getRandomType(typesArray) {
             const randomIndex = Math.floor(Math.random() * typesArray.length);
+            console.log('numero random type :' + randomIndex);
             return typesArray[randomIndex];
         },
 
@@ -113,6 +131,9 @@ export default {
             const randomIndex = Math.floor(Math.random() * itemsArray.length);
             return itemsArray[randomIndex];
         },
+        getRndInteger(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
     },
 
 
@@ -129,8 +150,10 @@ export default {
     background-image: url(../assets/images/D&D.jpg);
     background-size: cover;
     height: 100vh;
-    margin-top: -100px;
-    margin-bottom: -100px;
+}
+
+.my-bg-white {
+    background-color: #ffffff8f;
 }
 
 
