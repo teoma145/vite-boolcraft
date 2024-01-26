@@ -65,8 +65,10 @@ export default {
 .btn{
   position: absolute;
   top: 65%;
-  width: 300px;
-  height: 140px;
+  
+  //width: 300px;
+
+  //height: 140px;
   //background-color: rgba(80, 76, 71, 0.815);
   background-color: rgba(8, 8, 38, 0.632);
   left: 43%;
