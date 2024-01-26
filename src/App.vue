@@ -3,11 +3,13 @@
   <div class="space">
     <router-view ></router-view>
   </div>
+  <AppFooter/>
 </template>
 
 <script>
 import { store } from "./store";
 import AppHeader from "./components/AppHeader.vue"
+import AppFooter from "./components/AppFooter.vue";
 export default {
   name: 'App',
   data() {
@@ -15,7 +17,7 @@ export default {
 
     }
   },
-  components:{ AppHeader }
+  components:{ AppHeader, AppFooter }
   
 }
 </script>
