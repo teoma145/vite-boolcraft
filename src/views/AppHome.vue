@@ -1,16 +1,17 @@
 <template>
   <div class="conTain ">
     <img src="../assets/images/project2.jpg" alt="boolcraft" class="boolImages">
+  </div>
   
-  <div class="container d-flex justify-content-between align-items-center "></div>
+  <div class="container d-flex justify-content-between align-items-center ">
    <button type="button" class="btn btn-outline-warning ">
    
     <p>INSERT COIN</p>
     <i class="fa-solid fa-circle-dollar-to-slot fa-bounce" style="color: #FFD43B;"></i>
   </button>
-  </div>
+  
  
-  <section class="d-flex footerdo">
+  <section class="d-flex ">
         <div class="container d-flex justify-content-between align-items-center ">
             
             <ul class="nav align-items-center icons">
@@ -24,7 +25,7 @@
           </div>
 
     </section>
-  
+  </div>
   
 </template>
 
