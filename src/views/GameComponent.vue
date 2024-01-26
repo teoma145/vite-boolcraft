@@ -130,6 +130,7 @@ export default {
     background-size: cover;
     height: 100vh;
     margin-top: -100px;
+    margin-bottom: -100px;
 }
 
 
