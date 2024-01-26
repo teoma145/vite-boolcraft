@@ -46,7 +46,7 @@ export default {
 
 .conTain{
     
-    background-color: black;
+   
     height: 100vh;
     width: 100%;
     
