@@ -77,8 +77,7 @@ export default {
   border:none;
   color: orange;
   font-size: 2.5em;
-  //font-family: 'Sixtyfour', sans-serif;
-  //font-family: 'Honk', system-ui;
+ 
   font-family: 'Black Ops One', system-ui;
   
 }
