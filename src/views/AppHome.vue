@@ -1,9 +1,10 @@
 <template>
+  <div class="container-fluid d-flex justify-content-between align-items-center ">
   <div class="conTain ">
     <img src="../assets/images/project2.jpg" alt="boolcraft" class="boolImages">
   </div>
   
-  <div class="container d-flex justify-content-between align-items-center ">
+  <div>
    <button type="button" class="btn btn-outline-warning ">
    
     <p>INSERT COIN</p>
@@ -11,20 +12,17 @@
   </button>
   
  
-  <section class="d-flex ">
-        <div class="container d-flex justify-content-between align-items-center ">
+  
             
-            <ul class="nav align-items-center icons">
+            <ul class="nav  icons">
                 <li class="follow">Follow Us</li>
                 <li><i class="fa-brands fa-facebook log"></i></li>
                 <li><i class="fa-brands fa-square-x-twitter log" ></i></li>
                 <li><i class="fa-brands fa-youtube log" ></i></li>
                 <li><i class="fa-brands fa-periscope log" ></i></li>
             </ul>
-        
-          </div>
-
-    </section>
+       </div> 
+          
   </div>
   
 </template>
@@ -45,9 +43,10 @@ export default {
 
 <style lang="scss" scoped>
 
+
+
+
 .conTain{
-    
-   
     height: 100vh;
     width: 100%;
     
@@ -61,7 +60,8 @@ export default {
     position: relative;
     //object-fit: cover;
     //object-position: top;
-   
+    background-image: url('../assets/images/project2.jpg');
+  background-size: cover;
 }
 .btn{
   position: absolute;
@@ -92,7 +92,8 @@ export default {
 .icons{
   position: absolute;
   top: 90%;
-  margin-left: 16%;
+  //margin-left: 16%;
+ right: 40%;
 }
 
 .log{
