@@ -99,8 +99,8 @@ export default {
 .log{
   margin-left: 60px;
   font-size: 2.3em;
-  color: #FFD43B;
-  
+  //color: #FFD43B;
+  color: black;
 }
 
 .follow{
