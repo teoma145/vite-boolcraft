@@ -7,15 +7,18 @@
                 </h1>
                 <div class="col-3 pt-5">
 
-                    <select @change="getSelectedCharacter()" name="" id="" class="form-select"
-                        v-model="selectedCharacterId">
-                        <option :value="character.id" v-for="character in characters"> {{ character.name }}
-                        </option>
-                    </select>
+                    <div v-if="!randomCharacter">
+                        <select @change="getSelectedCharacter()" name="" id="" class="form-select"
+                            v-model="selectedCharacterId">
+                            <option :value="character.id" v-for="character in characters"> {{ character.name }}
+                            </option>
+                        </select>
+                    </div>
+
                 </div>
 
             </div>
-            ß
+
             <div class="text-black me-5">
                 <div class="d-flex justify-content-between" v-if="selectedCharacter">
                     <div class="">
