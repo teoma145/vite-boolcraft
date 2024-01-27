@@ -11,32 +11,44 @@ $fa-font-path: '../webfonts';
 @import 'bootstrap/scss/bootstrap';
 
 body {
-    font-family: 'Uncial Antiqua', cursive;
-    background-color: #1b1b1b;
-    color: #fff;
-  }
-.items-img{
-  width:640px;
-  height:360px;
-  overflow:hidden;
-  img{
-    width:100%;
-    object-fit:cover;
-    height:100%
+  font-family: 'Uncial Antiqua', cursive;
+  background-color: #1b1b1b;
+  color: #fff;
+}
+
+.items-img {
+  width: 640px;
+  height: 360px;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    object-fit: cover;
+    height: 100%
   }
 }
-.items-name,.items-prop{
+
+.table-container {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.items-name,
+.items-prop {
   background-color: $text-main;
-  color:black;
-  font-weight:600px;
+  color: black;
+  font-weight: 600px;
 }
-.items-prop{
-  font-size:1.2rem;
+
+.items-prop {
+  font-size: 1.2rem;
 }
-.items-icon{
-  color:$text-main
+
+.items-icon {
+  color: $text-main
 }
-.items-description{
-  width:600px;
+
+.items-description {
+  width: 600px;
   border: 1px solid $text-main;
 }

@@ -104,7 +104,7 @@
                     <input v-model="inputName" id="name" class="form-control" type="text">
                     <button @click="saveScore()" class="btn btn-success"> Save Score</button>
                 </div>
-                <div v-else class="col-12 col-md-6 ">
+                <div v-else class="col-12 col-md-6 table-container">
                     <i class="text-success fa-solid fa-check"></i> <span class="text-capitalize">{{
                         inputName }}</span>, your Score ({{ score }}) Has Been Saved;
 
@@ -306,4 +306,5 @@ body {
     height: 100%;
     margin: 0;
 
-}</style>
+}
+</style>
