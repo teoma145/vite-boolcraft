@@ -84,9 +84,15 @@
             <div v-if="score" class="row w-100 justify-space-between">
                 <div class="col-12 col-md-6 col-lg-4">
                     <h4>Results Battle</h4>
-                    <div v-if="youLose"> You Lose</div>
-                    <div v-if="youWin"> You Win</div>
-                    <div v-if="tie"> Tie </div>
+                    <div v-if="youLose">
+                        <h2 class="text-danger">You Lose</h2>
+                    </div>
+                    <div v-if="youWin">
+                        <h2 class="text-success">You Win</h2>
+                    </div>
+                    <div v-if="tie">
+                        <h2 class="text-primary">Tie</h2>
+                    </div>
                     <h6 class="mb-2">Score: {{ score }}</h6>
                     <div class="mb-5">
                         <button class="btn btn-warning" @click="newBattle()">Play New Battle</button>
@@ -300,5 +306,4 @@ body {
     height: 100%;
     margin: 0;
 
-}
-</style>
+}</style>
