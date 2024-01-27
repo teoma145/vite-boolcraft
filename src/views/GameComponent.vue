@@ -81,20 +81,50 @@
                 </div>
 
             </div>
-            <div v-if="score">
-                <h4>Results Battle</h4>
-                <div v-if="youLose"> You Lose</div>
-                <div v-if="youWin"> You Win</div>
-                <div v-if="tie"> Tie </div>
-                <h6 class="mb-2">Score: {{ score }}</h6>
-                <div class="mb-5">
-                    <button class="btn bnt-warning" @click="newBattle()">Play New Battle</button>
+            <div v-if="score" class="row w-100 justify-space-between">
+                <div class="col-12 col-md-6 col-lg-4">
+                    <h4>Results Battle</h4>
+                    <div v-if="youLose"> You Lose</div>
+                    <div v-if="youWin"> You Win</div>
+                    <div v-if="tie"> Tie </div>
+                    <h6 class="mb-2">Score: {{ score }}</h6>
+                    <div class="mb-5">
+                        <button class="btn btn-warning" @click="newBattle()">Play New Battle</button>
+                    </div>
                 </div>
 
+                <div v-if="!savedScore" class="col-12 col-md-6 ">
+                    <label for="name">Insert Your Name and save the score</label>
+                    <input v-model="inputName" id="name" class="form-control" type="text">
+                    <button @click="saveScore()" class="btn btn-success"> Save Score</button>
+                </div>
+                <div v-else class="col-12 col-md-6 ">
+                    <i class="text-success fa-solid fa-check"></i> <span class="text-capitalize">{{
+                        inputName }}</span>, your Score ({{ score }}) Has Been Saved;
 
-                <label for="name">Insert Your Name</label>
-                <input v-model="inputName" id="name" class="form-control" type="text">
-                <button @click="saveScore()" class="btn btn-success"> Save Score</button>
+                    <h6>Best score class#107:</h6>
+                    <table class="table table-dark table-striped">
+
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>score</th>
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+                            <tr v-for="score in store.stats">
+                                <td> {{ score.name }}</td>
+                                <td> {{ score.score }}</td>
+                            </tr>
+                        </tbody>
+
+
+
+                    </table>
+                </div>
             </div>
 
         </div>
@@ -121,7 +151,8 @@ export default {
             tie: false,
             youLose: false,
             score: null,
-            inputName: null
+            inputName: null,
+            savedScore: false
         }
     },
     methods: {
@@ -153,6 +184,12 @@ export default {
             axios.get(store.apiBaseUrl + `/items`).then((res) => {
 
                 store.Items = res.data.results
+            })
+        },
+        getStats() {
+            axios.get(store.apiBaseUrl + '/stats').then(res => {
+                store.stats = res.data.results;
+                console.log(store.stats);
             })
         },
         getRandomCharacter(charactersArray) {
@@ -201,7 +238,7 @@ export default {
                 score = speed - attack;
             } else {
                 this.youLose = true;
-                score = lifeRandom - lifeSelected - speed + attack;
+                score = lifeSelected - lifeRandom - speed + attack;
             }
             console.log('vita nostro giocatore :' + lifeSelected);
             console.log('vita giocatore random:' + lifeRandom);
@@ -216,11 +253,23 @@ export default {
             this.selectedCharacter = null;
             this.randomCharacter = null;
             this.inputName = null;
+            this.savedScore = false;
 
         },
         saveScore() {
-            console.log('punteggio :' + this.score);
-            console.log('nome :' + this.inputName)
+            //console.log('punteggio :' + this.score);
+            //console.log('nome :' + this.inputName);
+            const params = { name: this.inputName, score: this.score };
+            axios.post(store.apiBaseUrl + '/stats', params).then(res => {
+                console.log(res);
+                if (res.data.success) {
+
+                    this.savedScore = true;
+                    store.stats = res.data.results;
+                }
+            })
+
+
         }
     },
 
@@ -229,6 +278,7 @@ export default {
         this.getGameCharacters();
         this.getGameTypes();
         this.getGameItems();
+        this.getStats();
     }
 }
 </script>
