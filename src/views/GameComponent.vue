@@ -25,8 +25,17 @@
                         <div class="card">
                             <div class="card-body mb-5">
                                 <h5>Name:{{ selectedCharacter.name }}</h5>
-                                <div>Defence:{{ selectedCharacter.defence }} </div>
+                                <div>Type: {{ selectedCharacter.type.name }}</div>
                                 <div>Life:{{ selectedCharacter.life }}</div>
+                                <div>Speed:{{ selectedCharacter.speed }} </div>
+                                <div>Attack: {{ selectedCharacter.attack }}</div>
+                                <div>Defence:{{ selectedCharacter.defence }} </div>
+
+                                <div>Items: <span v-for="item in selectedCharacter.items ">, {{ item.name }}</span> .</div>
+
+
+
+
                             </div>
 
                         </div>
@@ -47,10 +56,15 @@
                     <div v-if="randomCharacter">
 
                         <div class="card">
-                            <div class="card-body">
-                                <h5>{{ randomCharacter.name }}</h5>
-                                <div>{{ randomCharacter.defence }} </div>
-                                <div>{{ randomCharacter.life }}</div>
+                            <div class="card-body mb-5">
+                                <h5>Name:{{ randomCharacter.name }}</h5>
+                                <div>Type: {{ randomCharacter.type.name }}</div>
+                                <div>Life:{{ randomCharacter.life }}</div>
+                                <div>Speed:{{ randomCharacter.speed }} </div>
+                                <div>Attack: {{ randomCharacter.attack }}</div>
+                                <div>Defence:{{ randomCharacter.defence }} </div>
+
+                                <div>Items: <span v-for="item in randomCharacter.items ">, {{ item.name }}</span> .</div>
                             </div>
                         </div>
 
@@ -61,8 +75,26 @@
 
             </div>
 
-            <div class="text-black ms-5">
+            <div class="text-black">
+                <div v-if="randomCharacter" class="text-center">
+                    <button class="btn btn-primary" @click="playBattle()"> Play the Battle</button>
+                </div>
 
+            </div>
+            <div v-if="score">
+                <h4>Results Battle</h4>
+                <div v-if="youLose"> You Lose</div>
+                <div v-if="youWin"> You Win</div>
+                <div v-if="tie"> Tie </div>
+                <h6 class="mb-2">Score: {{ score }}</h6>
+                <div class="mb-5">
+                    <button class="btn bnt-warning" @click="newBattle()">Play New Battle</button>
+                </div>
+
+
+                <label for="name">Insert Your Name</label>
+                <input v-model="inputName" id="name" class="form-control" type="text">
+                <button @click="saveScore()" class="btn btn-success"> Save Score</button>
             </div>
 
         </div>
@@ -84,7 +116,12 @@ export default {
             randomCharacter: null,
             selectedCharacterId: null,
             selectedCharacter: null,
-            charactersFree: null
+            charactersFree: null,
+            youWin: false,
+            tie: false,
+            youLose: false,
+            score: null,
+            inputName: null
         }
     },
     methods: {
@@ -136,6 +173,54 @@ export default {
         },
         getRndInteger(min, max) {
             return Math.floor(Math.random() * (max - min)) + min;
+        },
+        playBattle() {
+            // console.log('la battaglia inizia');
+
+            let speed, lifeSelected, lifeRandom, attack, score;
+            speed = this.selectedCharacter.speed - this.randomCharacter.speed;
+            if (speed > 0) {
+                attack = this.selectedCharacter.attack - this.randomCharacter.defence;
+                if (attack > 0) {
+                    lifeRandom = this.randomCharacter.life - this.selectedCharacter.attack;
+                    lifeSelected = this.selectedCharacter.life;
+                }
+            } else {
+                attack = this.randomCharacter.attack - this.selectedCharacter.defence;
+                if (attack > 0) {
+                    lifeSelected = this.selectedCharacter.life - this.randomCharacter.attack;
+                    lifeRandom = this.randomCharacter.life;
+                }
+            }
+
+            if (lifeSelected > lifeRandom) {
+                this.youWin = true;
+                score = lifeSelected - lifeRandom + speed - attack;
+            } else if (lifeSelected === lifeRandom) {
+                this.tie = true;
+                score = speed - attack;
+            } else {
+                this.youLose = true;
+                score = lifeRandom - lifeSelected - speed + attack;
+            }
+            console.log('vita nostro giocatore :' + lifeSelected);
+            console.log('vita giocatore random:' + lifeRandom);
+            this.score = score;
+
+        },
+        newBattle() {
+            this.youLose = false;
+            this.tie = false;
+            this.youWind = false;
+            this.score = null;
+            this.selectedCharacter = null;
+            this.randomCharacter = null;
+            this.inputName = null;
+
+        },
+        saveScore() {
+            console.log('punteggio :' + this.score);
+            console.log('nome :' + this.inputName)
         }
     },
 
