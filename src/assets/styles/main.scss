@@ -1,6 +1,7 @@
 @use './partials/variables' as *;
 
 $fa-font-path: '../webfonts';
+@import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Honk&family=Kanit:ital,wght@0,600;0,700;1,900&family=Lato:wght@100;300;400&family=Montserrat:wght@400;600&family=Noto+Sans:wght@300;600&family=PT+Sans:wght@400;700&family=Roboto+Mono:wght@600&family=Roboto:wght@300;500;900&family=Sixtyfour&display=swap');
 @import '@fortawesome/fontawesome-free/scss/fontawesome.scss';
 @import '@fortawesome/fontawesome-free/scss/solid.scss';
 @import '@fortawesome/fontawesome-free/scss/regular.scss';
