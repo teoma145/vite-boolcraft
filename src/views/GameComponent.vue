@@ -234,9 +234,11 @@ export default {
             // console.log('la battaglia inizia');
 
             // this.base20DefenseCalculation();
-            this.firstShift();
+            // this.firstShift();
             // this.shotToHit();
-            this.damageCalculated();
+            // this.damageCalculated();
+            this.newPlayBattle();
+
 
             let speed, lifeSelected, lifeRandom, attack, score;
             speed = this.selectedCharacter.speed - this.randomCharacter.speed;
@@ -264,10 +266,78 @@ export default {
                 this.youLose = true;
                 score = lifeSelected - lifeRandom - speed + attack;
             }
-            // console.log('vita nostro giocatore :' + lifeSelected);
-            // console.log('vita giocatore random:' + lifeRandom);
+            console.log('vita nostro giocatore :' + lifeSelected);
+            console.log('vita giocatore random:' + lifeRandom);
             this.score = score;
 
+        },
+
+        newPlayBattle(){
+            this.base20DefenseCalculation();
+            this.firstShift();
+            this.shiftsNumber = 0;
+            let selectedCharacterLife = this.selectedCharacter.life;
+            let randomCharacterLife = this.randomCharacter.life;
+            
+            while(randomCharacterLife > 0 && selectedCharacterLife > 0 ){
+                console.log('ROUND: '+this.shiftsNumber);
+
+                let speedCurrent;
+                let defenceCurrent;
+                let lifeCurrent;
+
+                if(this.shift){
+                    speedCurrent = this.realCharacterSpeed;
+                    defenceCurrent = this.selectedCharacterDefenseBase20;
+                    lifeCurrent = selectedCharacterLife;
+                    console.log('tocca a te');
+                }else{
+                    speedCurrent = this.realRandomSpeed;
+                    defenceCurrent = this.randomCharacterDefenseBase20;
+                    lifeCurrent = randomCharacterLife;
+                    console.log("tocca all'avversario");
+                }
+                
+                console.log('penalità: ' + this.penalityInAttack);
+                if(!this.penalityInAttack){
+                    let shotToHitCurrent = this.shotToHit();
+                    shotToHitCurrent += Math.round(speedCurrent / 10);
+                    // console.log(Math.round(speedCurrent / 10));
+                    console.log('tiro a colpire finale: ' + shotToHitCurrent);
+                    let damageCurrent;
+                    if(shotToHitCurrent > defenceCurrent && this.penalityInAttack === false){
+                        damageCurrent=this.damageCalculated();
+                        if(this.bonusInAttack){
+                            damageCurrent *= 2;
+                        }
+                        if(!this.shift) selectedCharacterLife -= damageCurrent;
+                        else randomCharacterLife -= damageCurrent;
+                        console.log('danni causati: ' + damageCurrent);
+                    }else{
+                        console.log('COLPO SCHIVATO');
+                    }
+                }else {
+                    console.log("HAI RACCOLTO L'ARMA");
+                    this.penalityInAttack = false;
+                }
+
+                console.log('vita giocatore: ' + selectedCharacterLife + ' --- vita nemico: ' + randomCharacterLife);
+                this.shift = !this.shift;
+                this.shiftsNumber++;
+            }
+
+
+            if (selectedCharacterLife > randomCharacterLife) {
+                this.youWin = true;
+                console.log('HAI VINTO');
+            }else if(randomCharacterLife > selectedCharacterLife){
+                this.youLose = true;
+                console.log('HAI PERSO');
+            }else{
+                this.tie = true;
+                console.log('PAREGGIO');
+            }
+            this.score = lifeSelected - lifeRandom;
         },
 
         /**
@@ -324,7 +394,7 @@ export default {
          * @returns {numeber}
          */
          shotToHit(){
-            this.penalityInAttack = false; //FORSE NON VA RESETTATO QUA
+            // this.penalityInAttack = false; //FORSE NON VA RESETTATO QUA
             this.bonusInAttack = false;
             const shotToHitCurrent  = Math.floor(Math.random() * 20) + 1;
             console.log('tiro per colpire, numero uscito:' + shotToHitCurrent );
