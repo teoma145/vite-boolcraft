@@ -7,7 +7,8 @@
             <nav>
                 <ul class="d-flex align-items-center ">
                     <li v-for="(item) in routes" class="mx-2">
-                        <router-link class="text-decoration-none nav-text" :to="{ name: `${item.path}`}"> {{ item.name }}</router-link>
+                        <router-link class="text-decoration-none nav-text" :to="{ name: `${item.path}` }"> {{ item.name
+                        }}</router-link>
                     </li>
                 </ul>
             </nav>
@@ -38,6 +39,10 @@ export default {
                     name: 'Items',
                 },
                 {
+                    path: 'our-team',
+                    name: 'Our Team',
+                },
+                {
                     path: 'game',
                     name: 'Game',
                 },
@@ -57,19 +62,19 @@ ul {
     list-style: none;
 }
 
-.bg-personal{
-    background: rgb(58,120,38);
-    background: linear-gradient(180deg, rgba(58,120,38,1) 0%, rgba(58,120,38,0) 100%);
+.bg-personal {
+    background: rgb(58, 120, 38);
+    background: linear-gradient(180deg, rgba(58, 120, 38, 1) 0%, rgba(58, 120, 38, 0) 100%);
     position: fixed;
     z-index: 1000;
-    width:100vw;
-    height:100px;
+    width: 100vw;
+    height: 100px;
 }
 
-.nav-text{
+.nav-text {
     text-transform: uppercase;
     font-weight: bold;
     color: rgb(255, 185, 17);
-    text-shadow: 4px 4px 9px rgba(0,0,0,0.82);
+    text-shadow: 4px 4px 9px rgba(0, 0, 0, 0.82);
 }
 </style>
