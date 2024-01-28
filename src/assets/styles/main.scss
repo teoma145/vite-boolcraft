@@ -18,10 +18,10 @@ body {
   width:640px;
   height:360px;
   overflow:hidden;
-  img{
+    img{
     width:100%;
     object-fit:contain;
-    height:100%
+    height:100%;
   }
 }
 .items-name,.items-prop{
@@ -38,4 +38,13 @@ body {
 .items-description{
   width:600px;
   border: 1px solid $text-main;
+}
+.items-img:hover{
+  transform: scale(1.05);
+  transition: 0.3s;
+  cursor:pointer
+}
+.items-description:hover{
+  transform: scale(1.05);
+  transition: 0.3s;
 }
