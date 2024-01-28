@@ -2,8 +2,9 @@
     <div class="container">
       <h1 class="text-center mb-5">Type Details</h1>
       <div class="row justify-content-center">
-        <div class="col-6 type-details-img mb-4" v-if="type.image">
-           <img :src="store.imagesBaseUrl + type.image" :alt="type.name">
+        <div class="col-6 type-details-img mb-4">
+           <img :src="store.imagesBaseUrl + type.image" :alt="type.name" v-if="type.image">
+           <img src="https://www.worldofleveldesign.com/categories/ue4/images/012-ue4-crash-course-86.jpg" class="card-img-top" :alt="type.name" v-else>
         </div>
         <div class="col-8">
           <div class="card">

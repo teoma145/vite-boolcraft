@@ -4,7 +4,8 @@
     <div class="row justify-content-center">
       <div class="col-md-4 mb-3 d-flex" v-for="character in characters" :key="character.id">
         <div class="card dnd-card flex-fill">
-          <img :src="store.imagesBaseUrl + character.image" class="card-img-top" :alt="character.name">
+          <img :src="store.imagesBaseUrl + character.image" class="card-img-top" :alt="character.name" v-if="character.image">
+          <img src="https://www.worldofleveldesign.com/categories/ue4/images/012-ue4-crash-course-86.jpg" class="card-img-top" :alt="character.name" v-else>
           <div class="card-body">
             <h5 class="card-title dnd-card-title">{{ character.name }}</h5>
             <p class="card-text dnd-card-text">{{ character.description }}</p>
