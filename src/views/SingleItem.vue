@@ -2,7 +2,7 @@
   <main class="container ">
     <div class="d-flex gap-5 pt-5">
       <div class="items-img" v-if="item">
-        <img src="/images/javelin.jpg" :alt="item.name" />
+        <img :src="store.imagesBaseUrl + item.image" :alt="item.name" />
       </div>
       <div class="items-description">
         <h1 class="text-center items-name py-1">{{ item.name }}</h1>
