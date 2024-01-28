@@ -234,8 +234,9 @@ export default {
             // console.log('la battaglia inizia');
 
             // this.base20DefenseCalculation();
-            // this.firstShift();
-            this.shotToHit();
+            this.firstShift();
+            // this.shotToHit();
+            this.damageCalculated();
 
             let speed, lifeSelected, lifeRandom, attack, score;
             speed = this.selectedCharacter.speed - this.randomCharacter.speed;
@@ -310,7 +311,7 @@ export default {
                     this.realRandomSpeed -= 10;
                 }
             }
-
+            // this.realCharacterSpeed = 1000; //per forzare un risultato
             console.log('velocità alleato calcolata: ' + this.realCharacterSpeed);
             console.log('velocità nemico a: ' + this.realRandomSpeed);
             this.shift = this.realCharacterSpeed > this.realRandomSpeed ? true : false;
@@ -331,6 +332,41 @@ export default {
             this.bonusInAttack = shotToHitCurrent === 20 ? true : false;
             console.log('penalità nel tiro:' + this.penalityInAttack + ' --- bonus nel tiro: ' + this.bonusInAttack);
             return shotToHitCurrent; //RICORDATI, AGGIUNGERE AL TIRO LA VELOCITA' REALE /10 ARROTONDATO
+        },
+
+        /**
+         * @function
+         * restituisce il danno calcolato in base all'attacco del pg e ai tiri del danno dei dani di un item preso randomicamente dall'inventario
+         * @returns {numeber}
+         */
+        damageCalculated(){
+            let damage = this.shift ? Math.round(this.selectedCharacter.attack / 10) : Math.round(this.randomCharacter.attack / 10); //se shift è vero è il turno del giocatore, quindi il danno base è il suo 
+            // console.log('danno base calcolato:' + damage);
+            let randomItem;
+            if(this.shift){
+                randomItem= this.getRndInteger(0,this.selectedCharacter.items.length);
+                randomItem = this.selectedCharacter.items[randomItem];
+            }else{
+                randomItem= this.getRndInteger(0,this.randomCharacter.items.length);
+                randomItem = this.randomCharacter.items[randomItem];
+
+            }
+            console.log('item usato: ' + randomItem.name);
+            
+            // randomItem.damage_dice = '3d12'; //per forzare un risultato
+
+            let amountRolls = parseInt(randomItem.damage_dice.substring(0, 1), 10);//in un 2d6 la prima cifra indica sempre quante volte bisogna lanciare quel dado
+            // console.log('il dado:'+ randomItem.damage_dice +' --- va lanciato: ' + amountRolls + ' volte');
+            let maxDamageOfShot = parseInt(randomItem.damage_dice.substring(2), 10);
+            // console.log('danno massimo a dado: ' + maxDamageOfShot);
+            for(let i=0;i<amountRolls;i++){
+                let damageOfShot = this.getRndInteger(1,maxDamageOfShot);
+                // console.log('danno del tiro: ' + damageOfShot);
+                damage += damageOfShot;
+                // console.log(i);
+            }
+            console.log('danno finale calcolato:' + damage);
+            return damage;
         },
 
         newBattle() {
