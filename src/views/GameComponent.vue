@@ -232,6 +232,7 @@ export default {
             // console.log('la battaglia inizia');
 
             // this.base20DefenseCalculation();
+            // this.firstShift();
 
             let speed, lifeSelected, lifeRandom, attack, score;
             speed = this.selectedCharacter.speed - this.randomCharacter.speed;
@@ -259,8 +260,8 @@ export default {
                 this.youLose = true;
                 score = lifeSelected - lifeRandom - speed + attack;
             }
-            console.log('vita nostro giocatore :' + lifeSelected);
-            console.log('vita giocatore random:' + lifeRandom);
+            // console.log('vita nostro giocatore :' + lifeSelected);
+            // console.log('vita giocatore random:' + lifeRandom);
             this.score = score;
 
         },
@@ -277,7 +278,42 @@ export default {
             console.log('difesa su base 100 nemico: '+this.randomCharacter.defence + ' --- difesa su base 20 nemico: '+this.randomCharacterDefenseBase20);
         },
 
+        /**
+         * @function
+         * Calcola chi gioca il primo turno in base alla velocità
+         * @returns {void}
+         */
+         firstShift(){
+            let selectedCharacterSpeed = this.selectedCharacter.speed;
+            let randomCharacterSpeed = this.randomCharacter.speed;
 
+            for(let i = 0; i<this.selectedCharacter.items.length;i++){
+                let subtrahend = this.selectedCharacter.items[i].weight.trim().substring(0, 2);
+                subtrahend =parseInt(subtrahend);
+                subtrahend *= 4;
+                if (!isNaN(subtrahend)) {
+                    selectedCharacterSpeed -= subtrahend;
+                } else {
+                    selectedCharacterSpeed -= 8;
+                }
+            }
+
+            for(let i = 0; i<this.randomCharacter.items.length;i++){
+                let subtrahend = this.randomCharacter.items[i].weight.trim().substring(0, 2);
+                subtrahend =parseInt(subtrahend);
+                subtrahend *= 4;
+                if (!isNaN(subtrahend)) {
+                    randomCharacterSpeed -= subtrahend;
+                } else {
+                    randomCharacterSpeed -= 8;
+                }
+            }
+
+            console.log('velocità alleato calcolata: ' + selectedCharacterSpeed);
+            console.log('velocità nemico a: ' + randomCharacterSpeed);
+            this.shift = selectedCharacterSpeed > randomCharacterSpeed ? true : false;
+            console.log('shift primo turno calcolato: ' + this.shift);
+        },
 
 
 
