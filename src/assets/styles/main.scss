@@ -14,10 +14,11 @@ body {
     background-color: #1b1b1b;
     color: #fff;
   }
-.items-img{
+.items-img,.type-details-img{
   width:640px;
   height:360px;
   overflow:hidden;
+  transition:0.3s;
     img{
     width:100%;
     object-fit:contain;
@@ -38,8 +39,9 @@ body {
 .items-description{
   width:600px;
   border: 1px solid $text-main;
+  transition:0.3s;
 }
-.items-img:hover{
+.items-img:hover,.type-details-img:hover{
   transform: scale(1.05);
   transition: 0.3s;
   cursor:pointer
