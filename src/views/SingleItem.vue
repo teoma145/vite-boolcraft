@@ -2,7 +2,8 @@
   <main class="container ">
     <div class="d-flex gap-5 pt-5">
       <div class="items-img" v-if="item">
-        <img :src="store.imagesBaseUrl + item.image" :alt="item.name" />
+        <img :src="store.imagesBaseUrl + item.image" :alt="item.name" v-if="item.image" />
+        <img src="https://www.worldofleveldesign.com/categories/ue4/images/012-ue4-crash-course-86.jpg" class="card-img-top" :alt="item.name" v-else>
       </div>
       <div class="items-description">
         <h1 class="text-center items-name py-1">{{ item.name }}</h1>

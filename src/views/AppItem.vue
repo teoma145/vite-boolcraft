@@ -4,10 +4,11 @@
         <div class="row d-flex justify-content-center">
             <div class="col-12 col-md-4 col-lg-3" v-for="item in store.Items" :key="item.id">
                 <div class="card mb-3 dnd-card" style="width: 18rem;">
-                    <img :src="store.imagesBaseUrl + item.image" class="card-img-top" :alt="item.name">
+                    <img :src="store.imagesBaseUrl + item.image" class="card-img-top" :alt="item.name" v-if="item.image">
+                    <img src="https://www.worldofleveldesign.com/categories/ue4/images/012-ue4-crash-course-86.jpg" class="card-img-top" :alt="item.name" v-else>
                     <div class="card-body">
                         <h5 class="card-title dnd-card-title">{{ item.name }}</h5>
-                        <p class="card-text dnd-card-text">{{ item.description.substring(0, 40) + '...' }}</p>
+                        <p class="card-text dnd-card-text">{{ item.description }}</p>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item"><strong>Type:</strong>{{ item.type }} </li>
                             <li class="list-group-item"><strong>Category:</strong>{{ item.category }} </li>
