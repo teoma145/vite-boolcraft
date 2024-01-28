@@ -16,39 +16,44 @@ body {
   color: #fff;
 }
 
-.items-img {
-  width: 640px;
-  height: 360px;
-  overflow: hidden;
-
-  img {
-    width: 100%;
-    object-fit: cover;
-    height: 100%
-  }
-}
-
 .table-container {
   max-height: 300px;
   overflow-y: auto;
 }
 
-.items-name,
-.items-prop {
+.items-img,.type-details-img{
+  width:640px;
+  height:360px;
+  overflow:hidden;
+  transition:0.3s;
+    img{
+    width:100%;
+    object-fit:contain;
+    height:100%;
+  }
+}
+.items-name,.items-prop{
   background-color: $text-main;
-  color: black;
-  font-weight: 600px;
+  color:black;
+  font-weight:600px;
 }
-
-.items-prop {
-  font-size: 1.2rem;
+.items-prop{
+  font-size:1.2rem;
 }
-
-.items-icon {
-  color: $text-main
+.items-icon{
+  color:$text-main
 }
-
-.items-description {
-  width: 600px;
+.items-description{
+  width:600px;
   border: 1px solid $text-main;
+  transition:0.3s;
+}
+.items-img:hover,.type-details-img:hover{
+  transform: scale(1.05);
+  transition: 0.3s;
+  cursor:pointer
+}
+.items-description:hover{
+  transform: scale(1.05);
+  transition: 0.3s;
 }

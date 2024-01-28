@@ -1,6 +1,6 @@
 <template>
-  <main class="container mt-5">
-    <div class="d-flex gap-5">
+  <main class="container ">
+    <div class="d-flex gap-5 pt-5">
       <div class="items-img" v-if="item">
         <img :src="store.imagesBaseUrl + item.image" :alt="item.name" />
       </div>
@@ -54,4 +54,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+main{
+  height:calc(100vh - 317px)
+}
+</style>
