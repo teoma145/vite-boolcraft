@@ -290,6 +290,7 @@ export default {
             this.shiftsNumber = 0;
             let selectedCharacterLife = this.selectedCharacter.life;
             let randomCharacterLife = this.randomCharacter.life;
+            let lifeCurrent;
             
             while(randomCharacterLife > 0 && selectedCharacterLife > 0 && this.shiftsNumber < 200){
                 console.log('ROUND: '+this.shiftsNumber);
