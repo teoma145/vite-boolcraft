@@ -158,7 +158,18 @@ export default {
             youLose: false,
             score: null,
             inputName: null,
-            savedScore: false
+            savedScore: false,
+            shiftsNumber: 0,
+
+            //aggiunte per i turni
+            shift: null, //booleano: falso turno nemico, vero turno giocatore
+            //aggiunte per il lancio del d20 "tiro per colpire"
+            shotToHitNumbers: [], //per creare uno storico dei tiri usciti, FORSE NON SERVE!!!
+            // shotToHitCurrent: 0, //creato e restituito dalla funzione shotToHit()
+            playerCharacterDefenseBase20: 0,
+            enemyCharacterDefenseBase20: 0,
+            penalityInAttack : false, //nel caso di 1 critico, l'arma cade e perde il turno successivo
+            bonusInAttack: false, //nel caso di 20 critico i danni verranno raddoppiati
         }
     },
     methods: {
