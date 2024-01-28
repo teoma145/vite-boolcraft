@@ -77,7 +77,7 @@
 
             <div class="text-black">
                 <div v-if="randomCharacter" class="text-center">
-                    <button class="btn btn-primary" @click="playBattle()"> Play the Battle</button>
+                    <button class="btn btn-primary" @click="newPlayBattle()"> Play the Battle</button>
                 </div>
 
             </div>
@@ -272,6 +272,18 @@ export default {
 
         },
 
+        /**
+         * @function
+         * cicla la battaglia finchè uno dei 2 personaggi arriva a 0 o meno di vita (o quasi solo in caso di bug arriva al round 200),
+         * prese le difese su base 20 e scelto il primo a combattere vengono inizializzati gli hp,
+         * vengono definite delle variabili generiche (non necessariamente del giocatore o dell'avversario) ed in base al turno (true del giocatore, false dell'avversario) vengono settate
+         * poi SE il turno precedente a qualcuno è uscito l'1 critico al tiro a colpire vedra perso il turno stesso ed il turno successivo il quanto "gli cade l'arma",
+         * SE invece esce un numero diverso viene calcolato se esso supera la difesa nemica (anche in base alla velocità per eccedere nei turno senza colpi),
+         * in tal caso vengono calcolati i danni e raddoppiati SE E SOLO SE il tiro a colpire aveva dato un 20 critico.
+         * e finisce il turno invertendo il round (shift = !shift)
+         * conclude definendo se il giocatore ha vinto o ha perso o pareggiato
+         * @return {void}
+         */
         newPlayBattle(){
             this.base20DefenseCalculation();
             this.firstShift();
@@ -279,12 +291,11 @@ export default {
             let selectedCharacterLife = this.selectedCharacter.life;
             let randomCharacterLife = this.randomCharacter.life;
             
-            while(randomCharacterLife > 0 && selectedCharacterLife > 0 ){
+            while(randomCharacterLife > 0 && selectedCharacterLife > 0 && this.shiftsNumber < 200){
                 console.log('ROUND: '+this.shiftsNumber);
 
                 let speedCurrent;
                 let defenceCurrent;
-                let lifeCurrent;
 
                 if(this.shift){
                     speedCurrent = this.realCharacterSpeed;
@@ -328,16 +339,22 @@ export default {
 
 
             if (selectedCharacterLife > randomCharacterLife) {
+                this.youLose = false;
+                this.tie = false;
                 this.youWin = true;
                 console.log('HAI VINTO');
             }else if(randomCharacterLife > selectedCharacterLife){
+                this.tie = false;
+                this.youWin = false;
                 this.youLose = true;
                 console.log('HAI PERSO');
             }else{
+                this.youWin = false;
+                this.youLose = false;
                 this.tie = true;
                 console.log('PAREGGIO');
             }
-            this.score = lifeSelected - lifeRandom;
+            this.score = selectedCharacterLife - randomCharacterLife;
         },
 
         /**
