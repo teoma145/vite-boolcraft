@@ -262,6 +262,24 @@ export default {
             this.score = score;
 
         },
+
+
+        /**
+         * @function
+         * Calcola la difesa su base 20 per difetto per il personaggio selezionato e l'avversario.
+         * @returns {void}
+         */
+         base20DefenseCalculation(){
+            this.playerCharacterDefenseBase20 = Math.floor(this.selectedCharacterStats.defence / 5);
+            console.log('difesa su base 100 giocatore: '+this.selectedCharacterStats.defence + ' --- difesa su base 20 giocatore: '+this.playerCharacterDefenseBase20);
+            this.enemyCharacterDefenseBase20 = Math.floor(this.selectedOpponentStats.defence / 5);
+            console.log('difesa su base 100 nemico: '+this.selectedOpponentStats.defence + ' --- difesa su base 20 nemico: '+this.enemyCharacterDefenseBase20);
+        },
+
+
+        
+
+
         newBattle() {
             this.youLose = false;
             this.tie = false;
