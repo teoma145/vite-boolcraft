@@ -166,8 +166,8 @@ export default {
             //aggiunte per il lancio del d20 "tiro per colpire"
             shotToHitNumbers: [], //per creare uno storico dei tiri usciti, FORSE NON SERVE!!!
             // shotToHitCurrent: 0, //creato e restituito dalla funzione shotToHit()
-            playerCharacterDefenseBase20: 0,
-            enemyCharacterDefenseBase20: 0,
+            selectedCharacterDefenseBase20: 0,
+            randomCharacterDefenseBase20: 0,
             penalityInAttack : false, //nel caso di 1 critico, l'arma cade e perde il turno successivo
             bonusInAttack: false, //nel caso di 20 critico i danni verranno raddoppiati
         }
@@ -231,6 +231,8 @@ export default {
         playBattle() {
             // console.log('la battaglia inizia');
 
+            // this.base20DefenseCalculation();
+
             let speed, lifeSelected, lifeRandom, attack, score;
             speed = this.selectedCharacter.speed - this.randomCharacter.speed;
             if (speed > 0) {
@@ -263,21 +265,20 @@ export default {
 
         },
 
-
         /**
          * @function
          * Calcola la difesa su base 20 per difetto per il personaggio selezionato e l'avversario.
          * @returns {void}
          */
          base20DefenseCalculation(){
-            this.playerCharacterDefenseBase20 = Math.floor(this.selectedCharacterStats.defence / 5);
-            console.log('difesa su base 100 giocatore: '+this.selectedCharacterStats.defence + ' --- difesa su base 20 giocatore: '+this.playerCharacterDefenseBase20);
-            this.enemyCharacterDefenseBase20 = Math.floor(this.selectedOpponentStats.defence / 5);
-            console.log('difesa su base 100 nemico: '+this.selectedOpponentStats.defence + ' --- difesa su base 20 nemico: '+this.enemyCharacterDefenseBase20);
+            this.selectedCharacterDefenseBase20 = Math.floor(this.selectedCharacter.defence / 5);
+            console.log('difesa su base 100 giocatore: '+this.selectedCharacter.defence + ' --- difesa su base 20 giocatore: '+this.selectedCharacterDefenseBase20);
+            this.randomCharacterDefenseBase20 = Math.floor(this.randomCharacter.defence / 5);
+            console.log('difesa su base 100 nemico: '+this.randomCharacter.defence + ' --- difesa su base 20 nemico: '+this.randomCharacterDefenseBase20);
         },
 
 
-        
+
 
 
         newBattle() {
