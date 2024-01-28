@@ -170,6 +170,8 @@ export default {
             randomCharacterDefenseBase20: 0,
             penalityInAttack : false, //nel caso di 1 critico, l'arma cade e perde il turno successivo
             bonusInAttack: false, //nel caso di 20 critico i danni verranno raddoppiati
+            realCharacterSpeed: 0, //calcolato in base agli items
+            realRandomSpeed:0,
         }
     },
     methods: {
@@ -233,6 +235,7 @@ export default {
 
             // this.base20DefenseCalculation();
             // this.firstShift();
+            this.shotToHit();
 
             let speed, lifeSelected, lifeRandom, attack, score;
             speed = this.selectedCharacter.speed - this.randomCharacter.speed;
@@ -280,21 +283,20 @@ export default {
 
         /**
          * @function
-         * Calcola chi gioca il primo turno in base alla velocità
+         * Calcola chi gioca il primo turno in base alla velocità variata in base agli items trasportati
          * @returns {void}
          */
          firstShift(){
-            let selectedCharacterSpeed = this.selectedCharacter.speed;
-            let randomCharacterSpeed = this.randomCharacter.speed;
-
+            this.realCharacterSpeed = this.selectedCharacter.speed;
+            this.realRandomSpeed = this.randomCharacter.speed;
             for(let i = 0; i<this.selectedCharacter.items.length;i++){
                 let subtrahend = this.selectedCharacter.items[i].weight.trim().substring(0, 2);
                 subtrahend =parseInt(subtrahend);
                 subtrahend *= 4;
                 if (!isNaN(subtrahend)) {
-                    selectedCharacterSpeed -= subtrahend;
+                    this.realCharacterSpeed -= subtrahend;
                 } else {
-                    selectedCharacterSpeed -= 8;
+                    this.realCharacterSpeed -= 8;
                 }
             }
 
@@ -303,19 +305,33 @@ export default {
                 subtrahend =parseInt(subtrahend);
                 subtrahend *= 4;
                 if (!isNaN(subtrahend)) {
-                    randomCharacterSpeed -= subtrahend;
+                    this.realRandomSpeed -= subtrahend;
                 } else {
-                    randomCharacterSpeed -= 8;
+                    this.realRandomSpeed -= 10;
                 }
             }
 
-            console.log('velocità alleato calcolata: ' + selectedCharacterSpeed);
-            console.log('velocità nemico a: ' + randomCharacterSpeed);
-            this.shift = selectedCharacterSpeed > randomCharacterSpeed ? true : false;
+            console.log('velocità alleato calcolata: ' + this.realCharacterSpeed);
+            console.log('velocità nemico a: ' + this.realRandomSpeed);
+            this.shift = this.realCharacterSpeed > this.realRandomSpeed ? true : false;
             console.log('shift primo turno calcolato: ' + this.shift);
         },
 
-
+        /**
+         * @function
+         * setta la penalità e il bonus a false, genera il tiro per colpire random (da 1 a 20), setta la penalità o il bunus se dovessero essere usciti gli estremi 1 o 20, restituisce il tiro.
+         * @returns {numeber}
+         */
+         shotToHit(){
+            this.penalityInAttack = false; //FORSE NON VA RESETTATO QUA
+            this.bonusInAttack = false;
+            const shotToHitCurrent  = Math.floor(Math.random() * 20) + 1;
+            console.log('tiro per colpire, numero uscito:' + shotToHitCurrent );
+            this.penalityInAttack = shotToHitCurrent === 1 ? true : false;
+            this.bonusInAttack = shotToHitCurrent === 20 ? true : false;
+            console.log('penalità nel tiro:' + this.penalityInAttack + ' --- bonus nel tiro: ' + this.bonusInAttack);
+            return shotToHitCurrent; //RICORDATI, AGGIUNGERE AL TIRO LA VELOCITA' REALE /10 ARROTONDATO
+        },
 
         newBattle() {
             this.youLose = false;
