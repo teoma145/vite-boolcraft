@@ -49,7 +49,7 @@ export default {
                 {
                     name: 'Matteo Pupino',
                     type: 'Front-end',
-                    avatar: 'images/avatar/'
+                    avatar: 'images/avatar/eqweqweqe.PNG'
                 },
                 {
                     name: 'Cristian Ursino',
