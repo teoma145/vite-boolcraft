@@ -77,7 +77,7 @@
 
             <div class="text-black">
                 <div v-if="randomCharacter" class="text-center">
-                    <button class="btn btn-primary" @click="playBattle()"> Play the Battle</button>
+                    <button class="btn btn-primary" @click="newPlayBattle()"> Play the Battle</button>
                 </div>
 
             </div>
@@ -158,7 +158,20 @@ export default {
             youLose: false,
             score: null,
             inputName: null,
-            savedScore: false
+            savedScore: false,
+            shiftsNumber: 0,
+
+            //aggiunte per i turni
+            shift: null, //booleano: falso turno nemico, vero turno giocatore
+            //aggiunte per il lancio del d20 "tiro per colpire"
+            shotToHitNumbers: [], //per creare uno storico dei tiri usciti, FORSE NON SERVE!!!
+            // shotToHitCurrent: 0, //creato e restituito dalla funzione shotToHit()
+            selectedCharacterDefenseBase20: 0,
+            randomCharacterDefenseBase20: 0,
+            penalityInAttack : false, //nel caso di 1 critico, l'arma cade e perde il turno successivo
+            bonusInAttack: false, //nel caso di 20 critico i danni verranno raddoppiati
+            realCharacterSpeed: 0, //calcolato in base agli items
+            realRandomSpeed:0,
         }
     },
     methods: {
@@ -220,6 +233,13 @@ export default {
         playBattle() {
             // console.log('la battaglia inizia');
 
+            // this.base20DefenseCalculation();
+            // this.firstShift();
+            // this.shotToHit();
+            // this.damageCalculated();
+            this.newPlayBattle();
+
+
             let speed, lifeSelected, lifeRandom, attack, score;
             speed = this.selectedCharacter.speed - this.randomCharacter.speed;
             if (speed > 0) {
@@ -251,6 +271,192 @@ export default {
             this.score = score;
 
         },
+
+        /**
+         * @function
+         * cicla la battaglia finchè uno dei 2 personaggi arriva a 0 o meno di vita (o quasi solo in caso di bug arriva al round 200),
+         * prese le difese su base 20 e scelto il primo a combattere vengono inizializzati gli hp,
+         * vengono definite delle variabili generiche (non necessariamente del giocatore o dell'avversario) ed in base al turno (true del giocatore, false dell'avversario) vengono settate
+         * poi SE il turno precedente a qualcuno è uscito l'1 critico al tiro a colpire vedra perso il turno stesso ed il turno successivo il quanto "gli cade l'arma",
+         * SE invece esce un numero diverso viene calcolato se esso supera la difesa nemica (anche in base alla velocità per eccedere nei turno senza colpi),
+         * in tal caso vengono calcolati i danni e raddoppiati SE E SOLO SE il tiro a colpire aveva dato un 20 critico.
+         * e finisce il turno invertendo il round (shift = !shift)
+         * conclude definendo se il giocatore ha vinto o ha perso o pareggiato
+         * @return {void}
+         */
+        newPlayBattle(){
+            this.base20DefenseCalculation();
+            this.firstShift();
+            this.shiftsNumber = 0;
+            let selectedCharacterLife = this.selectedCharacter.life;
+            let randomCharacterLife = this.randomCharacter.life;
+            let lifeCurrent;
+            
+            while(randomCharacterLife > 0 && selectedCharacterLife > 0 && this.shiftsNumber < 200){
+                console.log('ROUND: '+this.shiftsNumber);
+
+                let speedCurrent;
+                let defenceCurrent;
+
+                if(this.shift){
+                    speedCurrent = this.realCharacterSpeed;
+                    defenceCurrent = this.selectedCharacterDefenseBase20;
+                    lifeCurrent = selectedCharacterLife;
+                    console.log('tocca a te');
+                }else{
+                    speedCurrent = this.realRandomSpeed;
+                    defenceCurrent = this.randomCharacterDefenseBase20;
+                    lifeCurrent = randomCharacterLife;
+                    console.log("tocca all'avversario");
+                }
+                
+                console.log('penalità: ' + this.penalityInAttack);
+                if(!this.penalityInAttack){
+                    let shotToHitCurrent = this.shotToHit();
+                    shotToHitCurrent += Math.round(speedCurrent / 10);
+                    // console.log(Math.round(speedCurrent / 10));
+                    console.log('tiro a colpire finale: ' + shotToHitCurrent);
+                    let damageCurrent;
+                    if(shotToHitCurrent > defenceCurrent && this.penalityInAttack === false){
+                        damageCurrent=this.damageCalculated();
+                        if(this.bonusInAttack){
+                            damageCurrent *= 2;
+                        }
+                        if(!this.shift) selectedCharacterLife -= damageCurrent;
+                        else randomCharacterLife -= damageCurrent;
+                        console.log('danni causati: ' + damageCurrent);
+                    }else{
+                        console.log('COLPO SCHIVATO');
+                    }
+                }else {
+                    console.log("HAI RACCOLTO L'ARMA");
+                    this.penalityInAttack = false;
+                }
+
+                console.log('vita giocatore: ' + selectedCharacterLife + ' --- vita nemico: ' + randomCharacterLife);
+                this.shift = !this.shift;
+                this.shiftsNumber++;
+            }
+
+
+            if (selectedCharacterLife > randomCharacterLife) {
+                this.youLose = false;
+                this.tie = false;
+                this.youWin = true;
+                console.log('HAI VINTO');
+            }else if(randomCharacterLife > selectedCharacterLife){
+                this.tie = false;
+                this.youWin = false;
+                this.youLose = true;
+                console.log('HAI PERSO');
+            }else{
+                this.youWin = false;
+                this.youLose = false;
+                this.tie = true;
+                console.log('PAREGGIO');
+            }
+            this.score = selectedCharacterLife - randomCharacterLife;
+        },
+
+        /**
+         * @function
+         * Calcola la difesa su base 20 per difetto per il personaggio selezionato e l'avversario.
+         * @returns {void}
+         */
+         base20DefenseCalculation(){
+            this.selectedCharacterDefenseBase20 = Math.floor(this.selectedCharacter.defence / 5);
+            console.log('difesa su base 100 giocatore: '+this.selectedCharacter.defence + ' --- difesa su base 20 giocatore: '+this.selectedCharacterDefenseBase20);
+            this.randomCharacterDefenseBase20 = Math.floor(this.randomCharacter.defence / 5);
+            console.log('difesa su base 100 nemico: '+this.randomCharacter.defence + ' --- difesa su base 20 nemico: '+this.randomCharacterDefenseBase20);
+        },
+
+        /**
+         * @function
+         * Calcola chi gioca il primo turno in base alla velocità variata in base agli items trasportati
+         * @returns {void}
+         */
+         firstShift(){
+            this.realCharacterSpeed = this.selectedCharacter.speed;
+            this.realRandomSpeed = this.randomCharacter.speed;
+            for(let i = 0; i<this.selectedCharacter.items.length;i++){
+                let subtrahend = this.selectedCharacter.items[i].weight.trim().substring(0, 2);
+                subtrahend =parseInt(subtrahend);
+                subtrahend *= 4;
+                if (!isNaN(subtrahend)) {
+                    this.realCharacterSpeed -= subtrahend;
+                } else {
+                    this.realCharacterSpeed -= 8;
+                }
+            }
+
+            for(let i = 0; i<this.randomCharacter.items.length;i++){
+                let subtrahend = this.randomCharacter.items[i].weight.trim().substring(0, 2);
+                subtrahend =parseInt(subtrahend);
+                subtrahend *= 4;
+                if (!isNaN(subtrahend)) {
+                    this.realRandomSpeed -= subtrahend;
+                } else {
+                    this.realRandomSpeed -= 10;
+                }
+            }
+            // this.realCharacterSpeed = 1000; //per forzare un risultato
+            console.log('velocità alleato calcolata: ' + this.realCharacterSpeed);
+            console.log('velocità nemico a: ' + this.realRandomSpeed);
+            this.shift = this.realCharacterSpeed > this.realRandomSpeed ? true : false;
+            console.log('shift primo turno calcolato: ' + this.shift);
+        },
+
+        /**
+         * @function
+         * setta la penalità e il bonus a false, genera il tiro per colpire random (da 1 a 20), setta la penalità o il bunus se dovessero essere usciti gli estremi 1 o 20, restituisce il tiro.
+         * @returns {numeber}
+         */
+         shotToHit(){
+            // this.penalityInAttack = false; //FORSE NON VA RESETTATO QUA
+            this.bonusInAttack = false;
+            const shotToHitCurrent  = Math.floor(Math.random() * 20) + 1;
+            console.log('tiro per colpire, numero uscito:' + shotToHitCurrent );
+            this.penalityInAttack = shotToHitCurrent === 1 ? true : false;
+            this.bonusInAttack = shotToHitCurrent === 20 ? true : false;
+            console.log('penalità nel tiro:' + this.penalityInAttack + ' --- bonus nel tiro: ' + this.bonusInAttack);
+            return shotToHitCurrent; //RICORDATI, AGGIUNGERE AL TIRO LA VELOCITA' REALE /10 ARROTONDATO
+        },
+
+        /**
+         * @function
+         * restituisce il danno calcolato in base all'attacco del pg e ai tiri del danno dei dani di un item preso randomicamente dall'inventario
+         * @returns {numeber}
+         */
+        damageCalculated(){
+            let damage = this.shift ? Math.round(this.selectedCharacter.attack / 10) : Math.round(this.randomCharacter.attack / 10); //se shift è vero è il turno del giocatore, quindi il danno base è il suo 
+            // console.log('danno base calcolato:' + damage);
+            let randomItem;
+            if(this.shift){
+                randomItem= this.getRndInteger(0,this.selectedCharacter.items.length);
+                randomItem = this.selectedCharacter.items[randomItem];
+            }else{
+                randomItem= this.getRndInteger(0,this.randomCharacter.items.length);
+                randomItem = this.randomCharacter.items[randomItem];
+
+            }
+            console.log('item usato: ' + randomItem.name);
+            
+            // randomItem.damage_dice = '3d12'; //per forzare un risultato
+
+            let amountRolls = parseInt(randomItem.damage_dice.substring(0, 1), 10);//in un 2d6 la prima cifra indica sempre quante volte bisogna lanciare quel dado
+            // console.log('il dado:'+ randomItem.damage_dice +' --- va lanciato: ' + amountRolls + ' volte');
+            let maxDamageOfShot = parseInt(randomItem.damage_dice.substring(2), 10);
+            // console.log('danno massimo a dado: ' + maxDamageOfShot);
+            for(let i=0;i<amountRolls;i++){
+                let damageOfShot = this.getRndInteger(1,maxDamageOfShot);
+                // console.log('danno del tiro: ' + damageOfShot);
+                damage += damageOfShot;
+                // console.log(i);
+            }
+            console.log('danno finale calcolato:' + damage);
+            return damage;
+        },
+
         newBattle() {
             this.youLose = false;
             this.tie = false;
@@ -294,6 +500,9 @@ export default {
     background-image: url(../assets/images/D&D.jpg);
     background-size: cover;
     height: 100vh;
+    margin-top: -100px;
+    margin-bottom: -100px;
+    padding-top: 100px;
 }
 
 .my-bg-white {
