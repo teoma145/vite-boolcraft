@@ -39,12 +39,12 @@ export default {
                 {
                     name: 'Chiara Pontello',
                     type: 'Front-end',
-                    avatar: 'images/avatar/'
+                    avatar: 'images/avatar/1706517661745.jpg'
                 },
                 {
                     name: 'Matteo Tuveri',
                     type: 'Front-end',
-                    avatar: 'images/avatar/'
+                    avatar: 'images/avatar/IMG-20240128-WA0022.jpeg'
                 },
                 {
                     name: 'Matteo Pupino',
@@ -54,12 +54,12 @@ export default {
                 {
                     name: 'Cristian Ursino',
                     type: 'Back-end',
-                    avatar: 'images/avatar/'
+                    avatar: 'images/avatar/20240129_090738.jpg'
                 },
                 {
                     name: 'Valerio Bartoletti',
                     type: 'Back-end',
-                    avatar: 'images/avatar/'
+                    avatar: 'images/avatar/Picsart_23-04-17_10-56-56-465.jpg'
                 },
                 {
                     name: 'Michele Ebau',
