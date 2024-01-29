@@ -48,13 +48,13 @@
                     </div>
 
 
-                    <div>
+                    <div >
 
-                        <div class="mb-5 ps-5" v-if="randomCharacter">
-                            <div class="mt-4  ">
-                                <h2 class="text-danger">VERSUS</h2>
-                                <div class="console-logs overflow-my">
-                                    
+                        <div class="mb-5 " v-if="randomCharacter">
+                            <div class="">
+                                <h2 class="text-danger  text-center">VERSUS</h2>
+                                <div style="min-width: 400px" id="history" class="overflow-my text-center" v-html="historyText">
+                                
                                 </div>
                             </div>
                         </div>
@@ -180,9 +180,12 @@ export default {
             selectedCharacterDefenseBase20: 0,
             randomCharacterDefenseBase20: 0,
             penalityInAttack : false, //nel caso di 1 critico, l'arma cade e perde il turno successivo
+            
             bonusInAttack: false, //nel caso di 20 critico i danni verranno raddoppiati
             realCharacterSpeed: 0, //calcolato in base agli items
             realRandomSpeed:0,
+
+            historyText: '',
         }
     },
     methods: {
@@ -296,8 +299,16 @@ export default {
          * @return {void}
          */
         newPlayBattle(){
+
+            this.historyText = ''; 
+
             this.base20DefenseCalculation();
+            this.historyText = 'difesa su base 100 giocatore: '+this.selectedCharacter.defence + ' --- difesa su base 20 giocatore: '+this.selectedCharacterDefenseBase20 + '<br>'
+            this.historyText += 'difesa su base 100 nemico: '+this.randomCharacter.defence + ' --- difesa su base 20 nemico: '+this.randomCharacterDefenseBase20 + '<br>'
             this.firstShift();
+            this.historyText += 'velocità giocatore calcolata: ' + this.realCharacterSpeed + ' --- velocità nemico a: ' + this.realRandomSpeed + '(calcolati in base al peso degli items) <br> ' ;
+            if(this.shift) this.historyText += '<span style="color:blue">inizi tu</span> <br>';
+            else this.historyText += '<span style="color:blue">'+ "inizia l'avversario</span> <br>";
             this.shiftsNumber = 0;
             let selectedCharacterLife = this.selectedCharacter.life;
             let randomCharacterLife = this.randomCharacter.life;
@@ -305,6 +316,8 @@ export default {
             
             while(randomCharacterLife > 0 && selectedCharacterLife > 0 && this.shiftsNumber < 200){
                 this.updateConsoleLogs('ROUND: '+this.shiftsNumber);
+                if(this.shift)this.historyText += '<span style="color:green">ROUND' + (this.shiftsNumber + 1) +': </span> <br>';
+                else this.historyText += '<span style="color:red">ROUND' + (this.shiftsNumber + 1) +' </span> <br>';
 
                 let speedCurrent;
                 let defenceCurrent;
@@ -324,7 +337,11 @@ export default {
                 this.updateConsoleLogs('penalità: ' + this.penalityInAttack);
                 if(!this.penalityInAttack){
                     let shotToHitCurrent = this.shotToHit();
+                    this.historyText += 'Tiro a colpire uscito: ' + shotToHitCurrent + '<br>';
                     shotToHitCurrent += Math.round(speedCurrent / 10);
+                    if(!this.penalityInAttack && !this.bonusInAttack)this.historyText += 'con la velocità il tiro aumenta a: ' + shotToHitCurrent + '<br>'
+                    else if(this.penalityInAttack)this.historyText += "1 CRITICO, l'arma è caduta! <br>";
+                    else this.historyText += "20 CRITICO, farai danni doppi! <br>";
                     // this.updateConsoleLogs(Math.round(speedCurrent / 10));
                     this.updateConsoleLogs('tiro a colpire finale: ' + shotToHitCurrent);
                     let damageCurrent;
@@ -333,18 +350,23 @@ export default {
                         if(this.bonusInAttack){
                             damageCurrent *= 2;
                         }
+                        this.historyText += 'danni inflitti: ' + damageCurrent + '! <br>';
                         if(!this.shift) selectedCharacterLife -= damageCurrent;
                         else randomCharacterLife -= damageCurrent;
                         this.updateConsoleLogs('danni causati: ' + damageCurrent);
                     }else{
+                        if(!this.penalityInAttack)this.historyText += 'Il tiro è insufficente, COLPO SCHIVATO! <br>'
                         this.updateConsoleLogs('COLPO SCHIVATO');
                     }
                 }else {
+                    this.historyText += "ARMA RACCOLTA";
                     this.updateConsoleLogs("HAI RACCOLTO L'ARMA");
                     this.penalityInAttack = false;
                 }
 
                 this.updateConsoleLogs('vita giocatore: ' + selectedCharacterLife + ' --- vita nemico: ' + randomCharacterLife);
+                this.historyText += '<span style="color:darkgoldenrod">vita giocatore: <b>' + selectedCharacterLife + '</b> --- vita nemico: <b>' + randomCharacterLife + '</b></span><br>'
+                
                 this.shift = !this.shift;
                 this.shiftsNumber++;
             }
@@ -538,5 +560,8 @@ body {
     height: 100%;
     margin: 0;
 
+}
+.color{
+    color:darkgoldenrod
 }
 </style>
