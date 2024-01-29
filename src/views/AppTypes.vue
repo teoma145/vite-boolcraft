@@ -5,8 +5,10 @@
         <div class="row">
             <div v-for="item in typesList" class="col-3">
                 <div class="card dnd-card mb-3">
-                    <img :src="store.imagesBaseUrl + item.image" class="card-img-top" :alt="item.name" v-if="item.image">
-           <img src="https://www.worldofleveldesign.com/categories/ue4/images/012-ue4-crash-course-86.jpg" class="card-img-top" :alt="item.name" v-else>
+                    <div class="wrap-image">
+                        <img :src="store.imagesBaseUrl + item.image" class="card-img-top" :alt="item.name" v-if="item.image">
+                    <img src="https://www.worldofleveldesign.com/categories/ue4/images/012-ue4-crash-course-86.jpg" class="card-img-top" :alt="item.name" v-else>
+                    </div>
                     <div class="card-body">
                         <h3 class="card-title dnd-card-title"> {{ item.name }}</h3>
                         <p class="card-text dnd-card-text">{{ item.description.substring(0, 40) + '...' }}</p>
@@ -70,5 +72,15 @@ export default {
 .dnd-btn:hover {
     background-color: #4d2c18;
     border-color: #4d2c18;
+}
+
+.wrap-image{
+    height: 300px; 
+    overflow: hidden;
+    img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 }
 </style>
