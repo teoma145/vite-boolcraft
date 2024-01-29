@@ -300,7 +300,9 @@ export default {
         newPlayBattle(){
 
             this.historyText = ''; 
-
+            this.score = null;
+            this.savedScore = false;
+            
             this.base20DefenseCalculation();
             this.historyText = 'difesa su base 100 giocatore: '+this.selectedCharacter.defence + ' --- difesa su base 20 giocatore: '+this.selectedCharacterDefenseBase20 + '<br>'
             this.historyText += 'difesa su base 100 nemico: '+this.randomCharacter.defence + ' --- difesa su base 20 nemico: '+this.randomCharacterDefenseBase20 + '<br>'
