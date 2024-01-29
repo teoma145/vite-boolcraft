@@ -20,6 +20,11 @@
             <i class="fa-solid fa-coins items-icon text-center"></i>
             <span>{{ item.cost }}</span>
           </div>
+          <div class="d-flex flex-column ms-4">
+            <i class="fa-solid fa-skull-crossbones items-icon text-center"></i>
+            <span>{{ item.damage_dice }}</span>
+          </div>
+          <!-- <i class="fa-solid fa-skull-crossbones"></i> -->
         </div>
       </div>
     </div>
