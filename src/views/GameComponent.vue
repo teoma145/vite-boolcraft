@@ -22,8 +22,13 @@
             <div class="text-black me-5">
                 <div class="d-flex justify-content-between" v-if="selectedCharacter">
                     <div class="">
+                       
                         <div class="card">
                             <div class="card-body mb-5">
+                                <div>
+                                    <img :src="store.imagesBaseUrl + selectedCharacter.image" alt="{{ selectedCharacter.name }}" class="w-25">
+                                </div>
+                                
                                 <h5>Name:{{ selectedCharacter.name }}</h5>
                                 <div>Type: {{ selectedCharacter.type.name }}</div>
                                 <div>Life:{{ selectedCharacter.life }}</div>
@@ -39,24 +44,29 @@
                             </div>
 
                         </div>
-                        <button v-if="!randomCharacter" @click.once="rndOpponent()" class="btn btn-primary">Random
-                            Opponent</button>
+                        <button v-if="!randomCharacter" @click.once="rndOpponent()" class="btn btn-primary">Enter the Arena</button>
                     </div>
 
 
-                    <div>
+                    <div >
 
-                        <div class="mb-5" v-if="randomCharacter">
-                            <div class="mt-4">
-                                <h2 class="text-danger">VERSUS</h2>
+                        <div class="mb-5 " v-if="randomCharacter">
+                            <div>
+                                <h2 class="text-danger  text-center">VERSUS</h2>
+                                    <div style="min-width: 400px;position: relative;" id="history" class="overflow-my text-center" v-html="historyText">
+                                    </div>
                             </div>
                         </div>
+                        
                     </div>
 
                     <div v-if="randomCharacter">
 
                         <div class="card">
                             <div class="card-body mb-5">
+                                <div>
+                                    <img :src="store.imagesBaseUrl + randomCharacter.image" alt="{{ randomCharacter.name }}" class="w-25">
+                                </div>
                                 <h5>Name:{{ randomCharacter.name }}</h5>
                                 <div>Type: {{ randomCharacter.type.name }}</div>
                                 <div>Life:{{ randomCharacter.life }}</div>
@@ -67,7 +77,7 @@
                                 <div>Items: <span v-for="item in randomCharacter.items ">, {{ item.name }}</span> .</div>
                             </div>
                         </div>
-
+                        
                     </div>
 
                 </div>
@@ -77,9 +87,9 @@
 
             <div class="text-black">
                 <div v-if="randomCharacter" class="text-center">
-                    <button class="btn btn-primary" @click="newPlayBattle()"> Play the Battle</button>
+                    <button class="btn btn-primary me-5" @click="newPlayBattle()"> Play the Battle</button>
                 </div>
-
+                
             </div>
             <div v-if="score" class="row w-100 justify-space-between">
                 <div class="col-12 col-md-6 col-lg-4">
@@ -168,10 +178,13 @@ export default {
             // shotToHitCurrent: 0, //creato e restituito dalla funzione shotToHit()
             selectedCharacterDefenseBase20: 0,
             randomCharacterDefenseBase20: 0,
-            penalityInAttack : false, //nel caso di 1 critico, l'arma cade e perde il turno successivo
+            penalityInAttackCharacter : false, //nel caso di 1 critico, l'arma cade e perde il turno successivo
+            penalityInAttackRandom : false,
             bonusInAttack: false, //nel caso di 20 critico i danni verranno raddoppiati
             realCharacterSpeed: 0, //calcolato in base agli items
             realRandomSpeed:0,
+
+            historyText: '',
         }
     },
     methods: {
@@ -190,12 +203,12 @@ export default {
         },
         rndOpponent() {
             const charactersFree = this.characters.filter(el => el.id != this.selectedCharacterId)
-            console.log(charactersFree);
+            this.updateConsoleLogs(charactersFree);
             this.randomCharacter = charactersFree[this.getRndInteger(0, charactersFree.length)];
         },
         getGameTypes() {
             axios.get(store.apiBaseUrl + '/types').then(res => {
-                //console.log(res);
+                //this.updateConsoleLogs(res);
                 this.typesList = res.data.results;
             })
         },
@@ -208,7 +221,7 @@ export default {
         getStats() {
             axios.get(store.apiBaseUrl + '/stats').then(res => {
                 store.stats = res.data.results;
-                console.log(store.stats);
+                this.updateConsoleLogs(store.stats);
             })
         },
         getRandomCharacter(charactersArray) {
@@ -219,7 +232,7 @@ export default {
 
         getRandomType(typesArray) {
             const randomIndex = Math.floor(Math.random() * typesArray.length);
-            console.log('numero random type :' + randomIndex);
+            this.updateConsoleLogs('numero random type :' + randomIndex);
             return typesArray[randomIndex];
         },
 
@@ -231,7 +244,7 @@ export default {
             return Math.floor(Math.random() * (max - min)) + min;
         },
         playBattle() {
-            // console.log('la battaglia inizia');
+            // this.updateConsoleLogs('la battaglia inizia');
 
             // this.base20DefenseCalculation();
             // this.firstShift();
@@ -266,8 +279,8 @@ export default {
                 this.youLose = true;
                 score = lifeSelected - lifeRandom - speed + attack;
             }
-            console.log('vita nostro giocatore :' + lifeSelected);
-            console.log('vita giocatore random:' + lifeRandom);
+            this.updateConsoleLogs('vita nostro giocatore :' + lifeSelected);
+            this.updateConsoleLogs('vita giocatore random:' + lifeRandom);
             this.score = score;
 
         },
@@ -285,55 +298,80 @@ export default {
          * @return {void}
          */
         newPlayBattle(){
+
+            this.historyText = ''; 
+            this.score = null;
+            this.savedScore = false;
+            
             this.base20DefenseCalculation();
+            this.historyText = 'difesa su base 100 giocatore: '+this.selectedCharacter.defence + ' --- difesa su base 20 giocatore: '+this.selectedCharacterDefenseBase20 + '<br>'
+            this.historyText += 'difesa su base 100 nemico: '+this.randomCharacter.defence + ' --- difesa su base 20 nemico: '+this.randomCharacterDefenseBase20 + '<br>'
             this.firstShift();
+            this.historyText += 'velocità giocatore calcolata: ' + this.realCharacterSpeed + ' --- velocità nemico a: ' + this.realRandomSpeed + '(calcolati in base al peso degli items) <br> ' ;
+            if(this.shift) this.historyText += '<span style="color:blue">inizi tu</span> <br>';
+            else this.historyText += '<span style="color:blue">'+ "inizia l'avversario</span> <br>";
             this.shiftsNumber = 0;
             let selectedCharacterLife = this.selectedCharacter.life;
             let randomCharacterLife = this.randomCharacter.life;
             let lifeCurrent;
             
             while(randomCharacterLife > 0 && selectedCharacterLife > 0 && this.shiftsNumber < 200){
-                console.log('ROUND: '+this.shiftsNumber);
+                this.updateConsoleLogs('ROUND: '+this.shiftsNumber);
+                if(this.shift)this.historyText += '<span style="color:green">ROUND' + (this.shiftsNumber + 1) +': </span> <br>';
+                else this.historyText += '<span style="color:red">ROUND' + (this.shiftsNumber + 1) +' </span> <br>';
 
                 let speedCurrent;
                 let defenceCurrent;
 
                 if(this.shift){
                     speedCurrent = this.realCharacterSpeed;
-                    defenceCurrent = this.selectedCharacterDefenseBase20;
+                    defenceCurrent = this.randomCharacterDefenseBase20;
                     lifeCurrent = selectedCharacterLife;
-                    console.log('tocca a te');
+                    this.updateConsoleLogs('tocca a te');
                 }else{
                     speedCurrent = this.realRandomSpeed;
-                    defenceCurrent = this.randomCharacterDefenseBase20;
+                    defenceCurrent = this.selectedCharacterDefenseBase20;
                     lifeCurrent = randomCharacterLife;
-                    console.log("tocca all'avversario");
+                    this.updateConsoleLogs("tocca all'avversario");
                 }
                 
-                console.log('penalità: ' + this.penalityInAttack);
-                if(!this.penalityInAttack){
+                // this.updateConsoleLogs('penalità: ' + this.penalityInAttack);
+                if((this.shift && !this.penalityInAttackCharacter) || (!this.shift && !this.penalityInAttackRandom)){
                     let shotToHitCurrent = this.shotToHit();
+                    this.historyText += 'Tiro a colpire uscito: ' + shotToHitCurrent + '<br>';
                     shotToHitCurrent += Math.round(speedCurrent / 10);
-                    // console.log(Math.round(speedCurrent / 10));
-                    console.log('tiro a colpire finale: ' + shotToHitCurrent);
+                    if((this.shift && !this.penalityInAttackCharacter) || (!this.shift && !this.penalityInAttackRandom) && !this.bonusInAttack)this.historyText += 'con la velocità il tiro aumenta a: ' + shotToHitCurrent + '<br>'
+                    else if(this.penalityInAttackCharacter || this.penalityInAttackRandom)this.historyText += "1 CRITICO, l'arma è caduta! <br>";
+                    else this.historyText += "20 CRITICO, farai danni doppi! <br>";
+                    // this.updateConsoleLogs(Math.round(speedCurrent / 10));
+                    this.updateConsoleLogs('tiro a colpire finale: ' + shotToHitCurrent);
                     let damageCurrent;
-                    if(shotToHitCurrent > defenceCurrent && this.penalityInAttack === false){
+                    if(shotToHitCurrent > defenceCurrent && ((this.shift && !this.penalityInAttackCharacter) || (!this.shift && !this.penalityInAttackRandom))){
                         damageCurrent=this.damageCalculated();
                         if(this.bonusInAttack){
                             damageCurrent *= 2;
                         }
+                        this.historyText += 'danni inflitti: ' + damageCurrent + '! <br>';
                         if(!this.shift) selectedCharacterLife -= damageCurrent;
                         else randomCharacterLife -= damageCurrent;
-                        console.log('danni causati: ' + damageCurrent);
+                        this.updateConsoleLogs('danni causati: ' + damageCurrent);
                     }else{
-                        console.log('COLPO SCHIVATO');
+                        if((this.shift && !this.penalityInAttackCharacter) || (!this.shift && !this.penalityInAttackRandom))this.historyText += 'Il tiro è insufficente, COLPO SCHIVATO! <br>'
+                        this.updateConsoleLogs('COLPO SCHIVATO');
                     }
-                }else {
-                    console.log("HAI RACCOLTO L'ARMA");
-                    this.penalityInAttack = false;
+                }else if(this.penalityInAttackCharacter){
+                    this.historyText += "ARMA RACCOLTA <br> ";
+                    this.updateConsoleLogs("HAI RACCOLTO L'ARMA");
+                    this.penalityInAttackCharacter = false;
+                }else{
+                    this.historyText += "ARMA RACCOLTA <br>";
+                    this.updateConsoleLogs("HAI RACCOLTO L'ARMA");
+                    this.penalityInAttackRandom = false;
                 }
 
-                console.log('vita giocatore: ' + selectedCharacterLife + ' --- vita nemico: ' + randomCharacterLife);
+                this.updateConsoleLogs('vita giocatore: ' + selectedCharacterLife + ' --- vita nemico: ' + randomCharacterLife);
+                this.historyText += '<span style="color:rgb(121, 88, 3)">vita giocatore: <b>' + selectedCharacterLife + '</b> --- vita nemico: <b>' + randomCharacterLife + '</b></span><br>'
+                
                 this.shift = !this.shift;
                 this.shiftsNumber++;
             }
@@ -343,17 +381,17 @@ export default {
                 this.youLose = false;
                 this.tie = false;
                 this.youWin = true;
-                console.log('HAI VINTO');
+                this.updateConsoleLogs('HAI VINTO');
             }else if(randomCharacterLife > selectedCharacterLife){
                 this.tie = false;
                 this.youWin = false;
                 this.youLose = true;
-                console.log('HAI PERSO');
+                this.updateConsoleLogs('HAI PERSO');
             }else{
                 this.youWin = false;
                 this.youLose = false;
                 this.tie = true;
-                console.log('PAREGGIO');
+                this.updateConsoleLogs('PAREGGIO');
             }
             this.score = selectedCharacterLife - randomCharacterLife;
         },
@@ -365,9 +403,9 @@ export default {
          */
          base20DefenseCalculation(){
             this.selectedCharacterDefenseBase20 = Math.floor(this.selectedCharacter.defence / 5);
-            console.log('difesa su base 100 giocatore: '+this.selectedCharacter.defence + ' --- difesa su base 20 giocatore: '+this.selectedCharacterDefenseBase20);
+            this.updateConsoleLogs('difesa su base 100 giocatore: '+this.selectedCharacter.defence + ' --- difesa su base 20 giocatore: '+this.selectedCharacterDefenseBase20);
             this.randomCharacterDefenseBase20 = Math.floor(this.randomCharacter.defence / 5);
-            console.log('difesa su base 100 nemico: '+this.randomCharacter.defence + ' --- difesa su base 20 nemico: '+this.randomCharacterDefenseBase20);
+            this.updateConsoleLogs('difesa su base 100 nemico: '+this.randomCharacter.defence + ' --- difesa su base 20 nemico: '+this.randomCharacterDefenseBase20);
         },
 
         /**
@@ -400,10 +438,10 @@ export default {
                 }
             }
             // this.realCharacterSpeed = 1000; //per forzare un risultato
-            console.log('velocità alleato calcolata: ' + this.realCharacterSpeed);
-            console.log('velocità nemico a: ' + this.realRandomSpeed);
+            this.updateConsoleLogs('velocità alleato calcolata: ' + this.realCharacterSpeed);
+            this.updateConsoleLogs('velocità nemico a: ' + this.realRandomSpeed);
             this.shift = this.realCharacterSpeed > this.realRandomSpeed ? true : false;
-            console.log('shift primo turno calcolato: ' + this.shift);
+            this.updateConsoleLogs('shift primo turno calcolato: ' + this.shift);
         },
 
         /**
@@ -415,10 +453,11 @@ export default {
             // this.penalityInAttack = false; //FORSE NON VA RESETTATO QUA
             this.bonusInAttack = false;
             const shotToHitCurrent  = Math.floor(Math.random() * 20) + 1;
-            console.log('tiro per colpire, numero uscito:' + shotToHitCurrent );
-            this.penalityInAttack = shotToHitCurrent === 1 ? true : false;
+            this.updateConsoleLogs('tiro per colpire, numero uscito:' + shotToHitCurrent );
+            if(this.shift)this.penalityInAttackCharacter = shotToHitCurrent === 1 ? true : false;
+            else this.penalityInAttackRandom = shotToHitCurrent === 1 ? true : false;
             this.bonusInAttack = shotToHitCurrent === 20 ? true : false;
-            console.log('penalità nel tiro:' + this.penalityInAttack + ' --- bonus nel tiro: ' + this.bonusInAttack);
+            // this.updateConsoleLogs('penalità nel tiro:' + this.penalityInAttack + ' --- bonus nel tiro: ' + this.bonusInAttack);
             return shotToHitCurrent; //RICORDATI, AGGIUNGERE AL TIRO LA VELOCITA' REALE /10 ARROTONDATO
         },
 
@@ -429,7 +468,7 @@ export default {
          */
         damageCalculated(){
             let damage = this.shift ? Math.round(this.selectedCharacter.attack / 10) : Math.round(this.randomCharacter.attack / 10); //se shift è vero è il turno del giocatore, quindi il danno base è il suo 
-            // console.log('danno base calcolato:' + damage);
+            // this.updateConsoleLogs('danno base calcolato:' + damage);
             let randomItem;
             if(this.shift){
                 randomItem= this.getRndInteger(0,this.selectedCharacter.items.length);
@@ -439,21 +478,21 @@ export default {
                 randomItem = this.randomCharacter.items[randomItem];
 
             }
-            console.log('item usato: ' + randomItem.name);
+            this.updateConsoleLogs('item usato: ' + randomItem.name);
             
             // randomItem.damage_dice = '3d12'; //per forzare un risultato
 
             let amountRolls = parseInt(randomItem.damage_dice.substring(0, 1), 10);//in un 2d6 la prima cifra indica sempre quante volte bisogna lanciare quel dado
-            // console.log('il dado:'+ randomItem.damage_dice +' --- va lanciato: ' + amountRolls + ' volte');
+            // this.updateConsoleLogs('il dado:'+ randomItem.damage_dice +' --- va lanciato: ' + amountRolls + ' volte');
             let maxDamageOfShot = parseInt(randomItem.damage_dice.substring(2), 10);
-            // console.log('danno massimo a dado: ' + maxDamageOfShot);
+            // this.updateConsoleLogs('danno massimo a dado: ' + maxDamageOfShot);
             for(let i=0;i<amountRolls;i++){
                 let damageOfShot = this.getRndInteger(1,maxDamageOfShot);
-                // console.log('danno del tiro: ' + damageOfShot);
+                // this.updateConsoleLogs('danno del tiro: ' + damageOfShot);
                 damage += damageOfShot;
-                // console.log(i);
+                // this.updateConsoleLogs(i);
             }
-            console.log('danno finale calcolato:' + damage);
+            this.updateConsoleLogs('danno finale calcolato:' + damage);
             return damage;
         },
 
@@ -466,14 +505,14 @@ export default {
             this.randomCharacter = null;
             this.inputName = null;
             this.savedScore = false;
-
+            this.historyText = '';
         },
         saveScore() {
-            //console.log('punteggio :' + this.score);
-            //console.log('nome :' + this.inputName);
+            //this.updateConsoleLogs('punteggio :' + this.score);
+            //this.updateConsoleLogs('nome :' + this.inputName);
             const params = { name: this.inputName, score: this.score };
             axios.post(store.apiBaseUrl + '/stats', params).then(res => {
-                console.log(res);
+                this.updateConsoleLogs(res);
                 if (res.data.success) {
 
                     this.savedScore = true;
@@ -482,7 +521,13 @@ export default {
             })
 
 
-        }
+        },
+        updateConsoleLogs(log) {
+      const consoleLogsDiv = document.querySelector('.console-logs');
+      if (consoleLogsDiv) {
+        consoleLogsDiv.innerHTML += `<p>${log}</p>`;
+      }
+    },
     },
 
 
@@ -500,13 +545,22 @@ export default {
     background-image: url(../assets/images/D&D.jpg);
     background-size: cover;
     height: 100vh;
+    margin-top: -100px;
+    margin-bottom: -80px;
+    padding-top: 100px;
 }
 
 .my-bg-white {
     background-color: #ffffff8f;
 }
-
-
+.overflow-my {
+    overflow: overlay;
+    height: 250px;
+    width: 200px;
+}
+.overflow-my::-webkit-scrollbar {
+    display: none;
+}
 html,
 body {
     height: 100%;

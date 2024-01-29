@@ -2,7 +2,8 @@
   <main class="container ">
     <div class="d-flex gap-5 pt-5">
       <div class="items-img" v-if="item">
-        <img :src="store.imagesBaseUrl + item.image" :alt="item.name" />
+        <img :src="store.imagesBaseUrl + item.image" :alt="item.name" v-if="item.image" />
+        <img src="https://www.worldofleveldesign.com/categories/ue4/images/012-ue4-crash-course-86.jpg" class="card-img-top" :alt="item.name" v-else>
       </div>
       <div class="items-description">
         <h1 class="text-center items-name py-1">{{ item.name }}</h1>
@@ -19,6 +20,11 @@
             <i class="fa-solid fa-coins items-icon text-center"></i>
             <span>{{ item.cost }}</span>
           </div>
+          <div class="d-flex flex-column ms-4">
+            <i class="fa-solid fa-skull-crossbones items-icon text-center"></i>
+            <span>{{ item.damage_dice }}</span>
+          </div>
+          <!-- <i class="fa-solid fa-skull-crossbones"></i> -->
         </div>
       </div>
     </div>
