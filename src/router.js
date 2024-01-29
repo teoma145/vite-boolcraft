@@ -7,6 +7,7 @@ import AppItem from "./views/AppItem.vue";
 import SingleItem from "./views/SingleItem.vue";
 import CharacterDetails from "./views/CharacterDetails.vue";
 import GameComponent from "./views/GameComponent.vue";
+import AppOurTeam from "./views/AppOurTeam.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,6 +46,11 @@ const router = createRouter({
       path: "/items/:id",
       name: "single-item",
       component: SingleItem,
+    },
+    {
+      path: "/our-team",
+      name: "our-team",
+      component: AppOurTeam,
     },
     {
       path: "/game",
