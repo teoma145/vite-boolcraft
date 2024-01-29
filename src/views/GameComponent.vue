@@ -24,6 +24,10 @@
                     <div class="">
                         <div class="card">
                             <div class="card-body mb-5">
+                                <div>
+                                    <img :src="store.imagesBaseUrl + selectedCharacter.image" alt="{{ selectedCharacter.name }}" class="w-25">
+                                </div>
+                                
                                 <h5>Name:{{ selectedCharacter.name }}</h5>
                                 <div>Type: {{ selectedCharacter.type.name }}</div>
                                 <div>Life:{{ selectedCharacter.life }}</div>
@@ -39,8 +43,7 @@
                             </div>
 
                         </div>
-                        <button v-if="!randomCharacter" @click.once="rndOpponent()" class="btn btn-primary">Random
-                            Opponent</button>
+                        <button v-if="!randomCharacter" @click.once="rndOpponent()" class="btn btn-primary">Enter the Arena</button>
                     </div>
 
 
@@ -57,6 +60,9 @@
 
                         <div class="card">
                             <div class="card-body mb-5">
+                                <div>
+                                    <img :src="store.imagesBaseUrl + randomCharacter.image" alt="{{ randomCharacter.name }}" class="w-25">
+                                </div>
                                 <h5>Name:{{ randomCharacter.name }}</h5>
                                 <div>Type: {{ randomCharacter.type.name }}</div>
                                 <div>Life:{{ randomCharacter.life }}</div>
