@@ -51,11 +51,10 @@
                     <div >
 
                         <div class="mb-5 " v-if="randomCharacter">
-                            <div class="">
+                            <div>
                                 <h2 class="text-danger  text-center">VERSUS</h2>
-                                <div style="min-width: 400px" id="history" class="overflow-my text-center" v-html="historyText">
-                                
-                                </div>
+                                    <div style="min-width: 400px;position: relative;" id="history" class="overflow-my text-center" v-html="historyText">
+                                    </div>
                             </div>
                         </div>
                         
@@ -369,7 +368,7 @@ export default {
                 }
 
                 this.updateConsoleLogs('vita giocatore: ' + selectedCharacterLife + ' --- vita nemico: ' + randomCharacterLife);
-                this.historyText += '<span style="color:darkgoldenrod">vita giocatore: <b>' + selectedCharacterLife + '</b> --- vita nemico: <b>' + randomCharacterLife + '</b></span><br>'
+                this.historyText += '<span style="color:rgb(121, 88, 3)">vita giocatore: <b>' + selectedCharacterLife + '</b> --- vita nemico: <b>' + randomCharacterLife + '</b></span><br>'
                 
                 this.shift = !this.shift;
                 this.shiftsNumber++;
@@ -565,8 +564,5 @@ body {
     height: 100%;
     margin: 0;
 
-}
-.color{
-    color:darkgoldenrod
 }
 </style>
