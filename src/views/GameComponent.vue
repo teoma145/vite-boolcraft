@@ -179,8 +179,8 @@ export default {
             // shotToHitCurrent: 0, //creato e restituito dalla funzione shotToHit()
             selectedCharacterDefenseBase20: 0,
             randomCharacterDefenseBase20: 0,
-            penalityInAttack : false, //nel caso di 1 critico, l'arma cade e perde il turno successivo
-            
+            penalityInAttackCharacter : false, //nel caso di 1 critico, l'arma cade e perde il turno successivo
+            penalityInAttackRandom : false,
             bonusInAttack: false, //nel caso di 20 critico i danni verranno raddoppiati
             realCharacterSpeed: 0, //calcolato in base agli items
             realRandomSpeed:0,
@@ -324,28 +324,28 @@ export default {
 
                 if(this.shift){
                     speedCurrent = this.realCharacterSpeed;
-                    defenceCurrent = this.selectedCharacterDefenseBase20;
+                    defenceCurrent = this.randomCharacterDefenseBase20;
                     lifeCurrent = selectedCharacterLife;
                     this.updateConsoleLogs('tocca a te');
                 }else{
                     speedCurrent = this.realRandomSpeed;
-                    defenceCurrent = this.randomCharacterDefenseBase20;
+                    defenceCurrent = this.selectedCharacterDefenseBase20;
                     lifeCurrent = randomCharacterLife;
                     this.updateConsoleLogs("tocca all'avversario");
                 }
                 
-                this.updateConsoleLogs('penalità: ' + this.penalityInAttack);
-                if(!this.penalityInAttack){
+                // this.updateConsoleLogs('penalità: ' + this.penalityInAttack);
+                if((this.shift && !this.penalityInAttackCharacter) || (!this.shift && !this.penalityInAttackRandom)){
                     let shotToHitCurrent = this.shotToHit();
                     this.historyText += 'Tiro a colpire uscito: ' + shotToHitCurrent + '<br>';
                     shotToHitCurrent += Math.round(speedCurrent / 10);
-                    if(!this.penalityInAttack && !this.bonusInAttack)this.historyText += 'con la velocità il tiro aumenta a: ' + shotToHitCurrent + '<br>'
-                    else if(this.penalityInAttack)this.historyText += "1 CRITICO, l'arma è caduta! <br>";
+                    if((this.shift && !this.penalityInAttackCharacter) || (!this.shift && !this.penalityInAttackRandom) && !this.bonusInAttack)this.historyText += 'con la velocità il tiro aumenta a: ' + shotToHitCurrent + '<br>'
+                    else if(this.penalityInAttackCharacter || this.penalityInAttackRandom)this.historyText += "1 CRITICO, l'arma è caduta! <br>";
                     else this.historyText += "20 CRITICO, farai danni doppi! <br>";
                     // this.updateConsoleLogs(Math.round(speedCurrent / 10));
                     this.updateConsoleLogs('tiro a colpire finale: ' + shotToHitCurrent);
                     let damageCurrent;
-                    if(shotToHitCurrent > defenceCurrent && this.penalityInAttack === false){
+                    if(shotToHitCurrent > defenceCurrent && ((this.shift && !this.penalityInAttackCharacter) || (!this.shift && !this.penalityInAttackRandom))){
                         damageCurrent=this.damageCalculated();
                         if(this.bonusInAttack){
                             damageCurrent *= 2;
@@ -355,13 +355,17 @@ export default {
                         else randomCharacterLife -= damageCurrent;
                         this.updateConsoleLogs('danni causati: ' + damageCurrent);
                     }else{
-                        if(!this.penalityInAttack)this.historyText += 'Il tiro è insufficente, COLPO SCHIVATO! <br>'
+                        if((this.shift && !this.penalityInAttackCharacter) || (!this.shift && !this.penalityInAttackRandom))this.historyText += 'Il tiro è insufficente, COLPO SCHIVATO! <br>'
                         this.updateConsoleLogs('COLPO SCHIVATO');
                     }
-                }else {
-                    this.historyText += "ARMA RACCOLTA";
+                }else if(this.penalityInAttackCharacter){
+                    this.historyText += "ARMA RACCOLTA <br> ";
                     this.updateConsoleLogs("HAI RACCOLTO L'ARMA");
-                    this.penalityInAttack = false;
+                    this.penalityInAttackCharacter = false;
+                }else{
+                    this.historyText += "ARMA RACCOLTA <br>";
+                    this.updateConsoleLogs("HAI RACCOLTO L'ARMA");
+                    this.penalityInAttackRandom = false;
                 }
 
                 this.updateConsoleLogs('vita giocatore: ' + selectedCharacterLife + ' --- vita nemico: ' + randomCharacterLife);
@@ -449,9 +453,10 @@ export default {
             this.bonusInAttack = false;
             const shotToHitCurrent  = Math.floor(Math.random() * 20) + 1;
             this.updateConsoleLogs('tiro per colpire, numero uscito:' + shotToHitCurrent );
-            this.penalityInAttack = shotToHitCurrent === 1 ? true : false;
+            if(this.shift)this.penalityInAttackCharacter = shotToHitCurrent === 1 ? true : false;
+            else this.penalityInAttackRandom = shotToHitCurrent === 1 ? true : false;
             this.bonusInAttack = shotToHitCurrent === 20 ? true : false;
-            this.updateConsoleLogs('penalità nel tiro:' + this.penalityInAttack + ' --- bonus nel tiro: ' + this.bonusInAttack);
+            // this.updateConsoleLogs('penalità nel tiro:' + this.penalityInAttack + ' --- bonus nel tiro: ' + this.bonusInAttack);
             return shotToHitCurrent; //RICORDATI, AGGIUNGERE AL TIRO LA VELOCITA' REALE /10 ARROTONDATO
         },
 
@@ -499,7 +504,7 @@ export default {
             this.randomCharacter = null;
             this.inputName = null;
             this.savedScore = false;
-
+            this.historyText = '';
         },
         saveScore() {
             //this.updateConsoleLogs('punteggio :' + this.score);
