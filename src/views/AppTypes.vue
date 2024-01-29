@@ -7,7 +7,7 @@
                 <div class="card dnd-card mb-3">
                     <div class="wrap-image">
                         <img :src="store.imagesBaseUrl + item.image" class="card-img-top" :alt="item.name" v-if="item.image">
-                    <img src="https://www.worldofleveldesign.com/categories/ue4/images/012-ue4-crash-course-86.jpg" class="card-img-top" :alt="item.name" v-else>
+                        <img src="https://www.worldofleveldesign.com/categories/ue4/images/012-ue4-crash-course-86.jpg" class="card-img-top" :alt="item.name" v-else>
                     </div>
                     <div class="card-body">
                         <h3 class="card-title dnd-card-title"> {{ item.name }}</h3>
